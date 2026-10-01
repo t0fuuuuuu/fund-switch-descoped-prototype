@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Interactive EastWest Ageas Fund Switch self-service prototype" />
+    <title>Fund Switch — EastWest Ageas</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=2841-93096-fit" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0;20..48,400,1,0&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,400,1,0&family=Montserrat:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=53" />
+  </head>
+  <body>
+    <header class="main-nav">
+      <button class="brand" type="button" data-action="brand-home" aria-label="EastWest Ageas home">
+        <img src="assets/figma-main-nav-logo.svg" alt="eastwest ageas insurance" />
+      </button>
+      <nav class="public-nav-links" aria-label="Public navigation">
+        <button type="button" data-public-nav="Solutions">Solutions</button>
+        <button type="button" data-public-nav="Investment">Investment</button>
+        <button type="button" data-public-nav="About Us">About Us</button>
+        <button type="button" data-public-nav="News">News</button>
+        <button type="button" data-public-nav="Careers">Careers</button>
+        <button type="button" data-public-nav="Support">Support</button>
+        <button type="button" data-public-nav="Pay Now">Pay Now</button>
+      </nav>
+      <button class="public-login-pill" type="button" data-action="focus-login"><span class="material-symbols-rounded" aria-hidden="true">person</span> Log In</button>
+      <nav class="account-nav-links" aria-label="Account navigation">
+        <button type="button" data-nav="Dashboard">Dashboard</button>
+        <button type="button" data-nav="Policy Details">Policy Details</button>
+        <button type="button" data-nav="Documents">Documents</button>
+        <button type="button" data-nav="Payments">Payments</button>
+        <button type="button" data-nav="Investments">Investments</button>
+        <button class="active" type="button" data-nav="Services" aria-current="page">Services</button>
+      </nav>
+      <button class="profile" type="button" data-nav="Profile" aria-label="Open Elizabeth G.'s profile">
+        <img src="assets/figma-main-nav-user.svg" alt="" />
+        <span>Elizabeth G.</span>
+      </button>
+      <button class="mobile-menu" type="button" data-action="open-mobile-nav" aria-expanded="false" aria-controls="mobile-navigation">Menu <img src="assets/figma-mobile-menu-icon.svg" alt="" /></button>
+    </header>
+
+    <div class="mobile-nav-backdrop" id="mobile-navigation" data-action="dismiss-mobile-nav" hidden>
+      <section class="mobile-nav-panel" role="dialog" aria-modal="true" aria-labelledby="mobile-nav-title" tabindex="-1">
+        <h2 class="visually-hidden" id="mobile-nav-title">Account navigation</h2>
+        <header class="mobile-nav-header">
+          <img class="mobile-nav-logo" src="assets/figma-mobile-menu-logo.svg" alt="eastwest ageas insurance" />
+          <button class="mobile-nav-close" type="button" data-action="close-mobile-nav">Close <img src="assets/figma-mobile-menu-close.svg" alt="" /></button>
+        </header>
+        <div class="mobile-nav-user">
+          <span class="mobile-nav-avatar" aria-hidden="true"><img src="assets/figma-mobile-menu-avatar.svg" alt="" /><span>E</span></span>
+          <strong>ELIZABETH G.</strong>
+        </div>
+        <nav class="mobile-nav-list" aria-label="Mobile navigation">
+          <button class="mobile-nav-link mobile-nav-action" type="button" data-nav="Profile"><span class="material-symbols-rounded" aria-hidden="true">person</span><span>My Profile</span></button>
+          <button class="mobile-nav-link" type="button" data-nav="Dashboard">Dashboard</button>
+          <button class="mobile-nav-link" type="button" data-nav="Policy Details">Policy Details</button>
+          <button class="mobile-nav-link" type="button" data-nav="Documents">Documents</button>
+          <button class="mobile-nav-link" type="button" data-nav="Payments">Payments</button>
+          <button class="mobile-nav-link" type="button" data-nav="Investments">Investments</button>
+          <button class="mobile-nav-link" type="button" data-nav="Services">Services</button>
+          <button class="mobile-nav-link mobile-nav-action" type="button" data-nav="Log out"><span class="material-symbols-rounded" aria-hidden="true">lock</span><span>Log out</span></button>
+        </nav>
+      </section>
+    </div>
+
+    <main id="app" tabindex="-1"></main>
+    <button id="scenario-guide-trigger" class="scenario-guide-fab" type="button" data-action="open-scenario-guide" aria-label="Open prototype scenario guide" aria-controls="scenario-guide-popover" aria-expanded="false" title="Prototype scenario guide">
+      <span class="material-symbols-rounded" aria-hidden="true">cards_star</span>
+    </button>
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="dialog-root"></div>
+    <script src="app.js?v=53"></script>
+  </body>
+</html>
