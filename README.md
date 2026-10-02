@@ -1,6 +1,6 @@
 # Fund Switch — descoped stakeholder prototype
 
-[Open the interactive prototype](https://fund-switch-stakeholder-review.t0fuuuuu.chatgpt.site)
+[Open the interactive prototype](https://t0fuuuuuu.github.io/fund-switch-descoped-prototype/)
 
 This repository is a standalone snapshot of the descoped Fund Switch journey. It is separate from the full-version source. The RPQ and IPS downloads are the April 2025 forms supplied for this review.
 
