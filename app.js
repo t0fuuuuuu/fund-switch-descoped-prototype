@@ -434,6 +434,17 @@ function resetDocuments() {
   state.acknowledged = false;
 }
 
+function startDocumentUpload(kind) {
+  clearTimeout(documentUploadTimers[kind]);
+  state.documentUploads[kind].status = 'uploading';
+  render({ focus: false });
+  documentUploadTimers[kind] = window.setTimeout(() => {
+    if (state.documentUploads[kind]?.status !== 'uploading') return;
+    state.documentUploads[kind].status = 'uploaded';
+    render({ focus: false });
+  }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 100 : 900);
+}
+
 function documentsUploaded() { return state.documentUploads.rpq.status === 'uploaded' && state.documentUploads.ips.status === 'uploaded'; }
 function escapeHtml(value) { return String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]); }
 
@@ -626,7 +637,7 @@ function dashboardSkeletonView() {
       <section class="portal-care-card skeleton-card">${line('38%')}${line('72%')}${line('60%')}</section>
     </aside>
     <div class="portal-content dashboard-content" aria-hidden="true">
-      <section class="financial-journey-banner skeleton-card">${line('48%')}</section>
+      <section class="financial-journey-banner skeleton-card skeleton-banner"><div>${line('68%')}${line('54%')}</div></section>
       <section class="add-policy-card skeleton-card">${line('52%')}<span class="skeleton-button"></span></section>
       <div class="dashboard-policy-list">${card()}${card()}${card()}</div>
     </div>
@@ -1491,7 +1502,7 @@ document.addEventListener('change', (event) => {
     clearTimeout(documentUploadTimers[kind]);
     state.documentError = '';
     state.documentUploads[kind] = { status: 'selected', name: file.name };
-    render({ focus: false });
+    startDocumentUpload(kind);
   }
   if (target.name && target.name.startsWith('rpq-')) {
     state.rpqAnswers[target.name.replace('rpq-', '')] = target.value;
@@ -1643,13 +1654,7 @@ document.addEventListener('click', (event) => {
   if (action === 'confirm-upload') {
     const kind = control.dataset.documentKind;
     if (state.documentUploads[kind]?.status !== 'selected') return;
-    state.documentUploads[kind].status = 'uploading';
-    render({ focus: false });
-    documentUploadTimers[kind] = window.setTimeout(() => {
-      if (state.documentUploads[kind]?.status !== 'uploading') return;
-      state.documentUploads[kind].status = 'uploaded';
-      render({ focus: false });
-    }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 100 : 900);
+    startDocumentUpload(kind);
     return;
   }
   if (action === 'remove-additional-source') { state.additionalSourceIds = (state.additionalSourceIds || []).filter((id) => id !== control.dataset.sourceId); render({ focus: false }); return; }
