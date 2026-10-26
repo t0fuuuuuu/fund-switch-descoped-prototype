@@ -169,6 +169,7 @@ h2, h3 { color: #111827; }
 .request-progress-indicator .material-symbols-rounded { font-size: 20px; font-variation-settings: 'FILL' 1; }
 .request-progress-step.complete .request-progress-indicator { color: #448214; }
 .request-progress-step.upcoming { color: #aab1bd; }
+.request-progress-step.upcoming strong { font-weight: 500; }
 .request-progress-step.upcoming .request-progress-indicator { color: #dce1e8; }
 .request-progress-step > span:last-child { display: grid; gap: 2px; }
 .request-progress-step strong { font-size: 14px; line-height: 20px; }
@@ -362,8 +363,8 @@ h2, h3 { color: #111827; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .switch-summary { background: #fff; border: 1px solid #d5dbe3; border-radius: 8px; margin-top: 16px; padding: 20px; }
-.switch-summary h2 { color: #364154; font: 700 20px/32px Montserrat, Lato, sans-serif; margin: 0; }
-.summary-intro { color: #667085; font-size: 16px; line-height: 28px; margin: 0 0 16px; }
+.switch-summary h2 { color: #364154; font: 700 18px/28px Montserrat, Lato, sans-serif; margin: 0 0 4px; }
+.summary-intro { color: #667085; font-size: 14px; line-height: 21px; margin: 0 0 16px; }
 .summary-comparison-table { border: 1px solid #e6e7eb; border-collapse: separate; border-radius: 8px; border-spacing: 0; color: #6a7282; font-size: 14px; line-height: 22px; table-layout: fixed; width: 100%; }
 .summary-comparison-table th, .summary-comparison-table td { padding: 12px 16px; text-align: left; vertical-align: top; width: 50%; overflow-wrap: anywhere; }
 .summary-comparison-table th { background: #f3f4f6; color: #364154; font-size: 16px; font-weight: 700; line-height: 24px; }
@@ -1040,7 +1041,7 @@ body.dialog-open { overflow: hidden; }
   .portfolio-row > div:not(:first-child) { text-align: left; }
   .switch-grid { gap: 16px; }
   .switch-arrow { height: 24px; margin: 0 0 0 4px; transform: rotate(90deg); }
-  .fund-card { padding: 0 4px; }
+  .fund-card { padding: 0; }
   .fund-step-heading { margin-bottom: 12px; }
   .fund-card > .field { margin-left: 0; }
   .fund-card .ds-select-control { height: 32px; min-height: 32px; }
@@ -1174,4 +1175,78 @@ body.dialog-open { overflow: hidden; }
   body.public-mode .main-nav { gap: 20px; }
   body.public-mode .public-nav-links { gap: 4px; }
   body.public-mode .public-nav-links button { padding: 8px 10px; }
+}
+
+.waiver-terms-link { background: none; border: 0; padding: 0; color: var(--purple); font: inherit; text-decoration: underline; cursor: pointer; }
+.waiver-modal-body p { line-height: 1.6; margin: 0 0 20px; }
+
+.fund-section-skeleton .skeleton-heading { height: 24px; width: 60%; }
+.fund-section-skeleton .skeleton-description { width: 85%; }
+.skeleton-form-row { align-items: center; border: 1px solid var(--line); border-radius: 8px; display: flex; gap: 16px; padding: 16px; margin-top: 12px; min-height: 72px; }
+.skeleton-form-row .skeleton-line { flex: 1; }
+.skeleton-form-row .skeleton-button { width: 32px; height: 32px; }
+.skeleton-summary-table { border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; padding: 20px; margin: 20px 0; }
+.fund-section-skeleton .skeleton-amount { height: 32px; width: 55%; }
+@media (prefers-reduced-motion: reduce) { .fund-section-skeleton .skeleton-line::after, .fund-section-skeleton .skeleton-button::after { animation: none; } }
+
+/* File Upload — TDX Design System V2 variants. */
+.document-upload-card.is-uploaded .document-upload-box { border-color: #c7ced9; background: #fff; }
+.document-upload-card.has-error .document-upload-box { border-color: #db3e5d; background: #fff; }
+.document-upload-card.is-uploaded .document-upload-icon { color: #47830f; }
+.document-upload-card.is-uploaded .document-upload-icon .material-symbols-rounded { font-variation-settings: 'FILL' 1; }
+.document-upload-box { background: #fff; }
+.document-upload-info { gap: 0; }
+.document-upload-info strong { font-size: 14px; line-height: 20px; }
+.document-upload-info small { color: #364154; font-size: 12px; line-height: 16px; }
+.document-upload-info > span { overflow: hidden; text-overflow: ellipsis; }
+.document-upload-card.has-error .document-upload-info small { overflow: visible; white-space: normal; }
+.document-upload-button { min-height: 32px; gap: 0; }
+.document-upload-button > span:not(.material-symbols-rounded) { padding: 0 4px; }
+.document-upload-reset, .document-upload-delete { align-items: center; background: none; border: 0; color: #364154; cursor: pointer; display: inline-flex; flex: 0 0 24px; justify-content: center; padding: 0; height: 24px; width: 24px; }
+.document-upload-delete { flex-basis: 40px; padding: 0 8px; width: 40px; }
+.document-upload-reset .material-symbols-rounded, .document-upload-delete .material-symbols-rounded { font-size: 24px; }
+.document-upload-inflight { display: grid; gap: 4px; width: 100%; min-width: 0; }
+.document-upload-file-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.document-upload-filename { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #364154; font-size: 12px; line-height: 16px; }
+.document-upload-progress-row { align-items: center; display: flex; gap: 16px; padding-left: 32px; font-size: 12px; line-height: 16px; color: #364154; }
+.document-upload-progress-row > span { min-width: 24px; }
+.document-upload-progress { flex: 1; height: 8px; margin: 0; background: #f2f4f7; border-radius: 8px; }
+.document-upload-progress span { background: linear-gradient(90deg, #ff9d0a, #a82675); animation: none; border-radius: inherit; transition: width .2s ease; }
+
+.section-message.review-waiver-banner { gap: 8px; margin-top: 16px; }
+.review-waiver-banner > .material-symbols-rounded { font-size: 24px; font-variation-settings: 'FILL' 0, 'GRAD' 0; }
+.review-waiver-banner > div { gap: 4px; }
+.review-waiver-banner strong { font-size: 16px; line-height: 24px; }
+.review-waiver-banner > div > span { font-size: 14px; line-height: 20px; }
+.review-confirmation { align-items: flex-start; }
+
+.section-message.risk-documents-banner { margin-top: 16px; gap: 8px; }
+.risk-documents-banner > .material-symbols-rounded { font-size: 24px; font-variation-settings: 'FILL' 0, 'GRAD' 0; }
+.risk-documents-banner > div { gap: 4px; }
+.risk-documents-banner strong { font-size: 16px; line-height: 24px; }
+.risk-documents-banner > div > span { font-size: 14px; line-height: 20px; }
+
+.flow-body > .document-downloads { margin-top: 16px; }
+
+/* Terms reader: fixed header/footer with an independently scrollable document. */
+body.terms-open { overflow: hidden; }
+.modal.terms-modal { max-width: 640px; max-height: min(760px, calc(100dvh - 48px)); overflow: hidden; padding: 0; border-radius: 12px; }
+.terms-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 24px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+.terms-modal .terms-header h2 { color: #364154; font: 700 20px/28px Montserrat, Lato, sans-serif; margin: 0; }
+.terms-header p { color: #667085; font-size: 14px; line-height: 20px; margin: 4px 0 0; }
+.terms-header .icon-button { flex-shrink: 0; }
+.terms-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px; scrollbar-gutter: stable; }
+.terms-sections { margin: 0; padding-left: 24px; color: #364154; }
+.terms-sections li { padding-left: 4px; margin: 0 0 24px; }
+.terms-sections li:last-child { margin-bottom: 0; }
+.terms-sections li::marker { font: 700 14px/24px Lato, sans-serif; color: #364154; }
+.terms-sections h3 { font: 700 16px/24px Lato, sans-serif; margin: 0 0 6px; color: #364154; }
+.terms-sections p { font-size: 14px; line-height: 22px; color: #364154; margin: 0; }
+.terms-footer { border-top: 1px solid var(--line); display: flex; justify-content: flex-end; flex-shrink: 0; padding: 16px 24px; background: #fff; }
+.terms-footer .btn { min-width: 112px; }
+@media (max-width: 760px) {
+  .modal.terms-modal { max-height: calc(100dvh - 24px); padding: 0; }
+  .terms-header, .terms-body { padding: 20px; }
+  .terms-footer { padding: 16px 20px; }
+  .terms-footer .btn { width: 100%; }
 }

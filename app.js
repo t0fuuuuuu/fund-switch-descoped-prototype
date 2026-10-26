@@ -4,6 +4,10 @@ const dialogRoot = document.querySelector('#dialog-root');
 const mobileNav = document.querySelector('#mobile-navigation');
 const mobileMenuButton = document.querySelector('[data-action="open-mobile-nav"]');
 const scenarioGuideButton = document.querySelector('.scenario-guide-fab');
+const scenarioGuideVisibilityKey = 'fund-switch-scenario-guide-hidden';
+let scenarioGuideHidden = false;
+try { scenarioGuideHidden = sessionStorage.getItem(scenarioGuideVisibilityKey) === 'true'; } catch {}
+
 const mainNav = document.querySelector('.main-nav');
 let mobileNavReturnFocus = null;
 let waiverReturnFocus = null;
@@ -262,7 +266,7 @@ const prototypeScenarios = [
   {
     id: 'standard-peso',
     category: 'Fund switching',
-    title: 'Standard Peso Fund Switch',
+    title: 'Standard Fund Switch',
     description: 'Eligible Peso policy, above minimum, with downloadable RPQ and IPS sample forms.',
     state: { screen: 'funds', policyId: '810000085627', sourceId: 'balanced', targetId: 'bond', fundCheck: 'complete' },
   },
@@ -274,10 +278,17 @@ const prototypeScenarios = [
     state: { screen: 'funds', policyId: '810000085627', sourceId: 'balanced', targetId: 'high-dividend', fundCheck: 'complete' },
   },
   {
+    id: 'document-upload-error',
+    category: 'Fund switching',
+    title: 'Document Failed Upload — Retry',
+    description: 'Simulated upload failure. Retry the RPQ upload using the refresh icon.',
+    state: { screen: 'documents', policyId: '810000085627', sourceId: 'balanced', targetId: 'high-dividend', fundCheck: 'complete', documentUploads: { rpq: { status: 'error', name: 'completed-rpq.pdf' }, ips: { status: 'empty', name: '' } } },
+  },
+  {
     id: 'risk-mismatch-waiver',
     category: 'Fund switching',
     title: 'Higher-Risk Target — Documents',
-    description: 'Higher-risk target follows the same document download and upload journey; there is no in-app waiver.',
+    description: 'Higher-risk target follows the same document download and upload journey; waiver confirmation is required on the final review step.',
     state: { screen: 'funds', policyId: '810000085627', sourceId: 'balanced', targetId: 'active-equity', fundCheck: 'complete' },
   },
   {
@@ -436,13 +447,20 @@ function resetDocuments() {
 
 function startDocumentUpload(kind) {
   clearTimeout(documentUploadTimers[kind]);
-  state.documentUploads[kind].status = 'uploading';
+  const upload = state.documentUploads[kind];
+  upload.status = 'uploading';
+  upload.progress = 0;
+  state.acknowledged = false;
+  state.waiverAccepted = false;
   render({ focus: false });
-  documentUploadTimers[kind] = window.setTimeout(() => {
-    if (state.documentUploads[kind]?.status !== 'uploading') return;
-    state.documentUploads[kind].status = 'uploaded';
+  function advance() {
+    if (state.documentUploads[kind] !== upload || upload.status !== 'uploading') return;
+    upload.progress = Math.min(100, upload.progress + 25);
+    if (upload.progress === 100) upload.status = 'uploaded';
     render({ focus: false });
-  }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 100 : 900);
+    if (upload.status === 'uploading') documentUploadTimers[kind] = window.setTimeout(advance, 250);
+  }
+  documentUploadTimers[kind] = window.setTimeout(advance, 250);
 }
 
 function documentsUploaded() { return state.documentUploads.rpq.status === 'uploaded' && state.documentUploads.ips.status === 'uploaded'; }
@@ -799,7 +817,7 @@ function requestsView() {
             ${icon(isDraft ? 'keyboard_arrow_right' : expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down')}
           </button>
           ${expanded ? `<div class="request-progress" aria-label="Fund switch request progress">
-            <div class="request-progress-step complete"><span class="request-progress-indicator">${icon('check_circle')}</span><span><strong>Submitted</strong><small>Your fund switch request was received.</small></span></div>
+            <div class="request-progress-step complete"><span class="request-progress-indicator">${icon('check_circle')}</span><span><strong>Submitted</strong><small>Your fund switch request is currently under review. We’ll notify you if additional information is required.</small></span></div>
             <div class="request-progress-step ${isComplete ? 'complete' : 'upcoming'}"><span class="request-progress-indicator">${icon(isComplete ? 'check_circle' : 'circle')}</span><span><strong>In Progress</strong>${isComplete ? '<small>Your request passed validation and was processed.</small>' : ''}</span></div>
             <div class="request-progress-step ${isComplete ? 'complete' : 'upcoming'}"><span class="request-progress-indicator">${icon(isComplete ? 'check_circle' : 'circle')}</span><span><strong>Completed</strong>${isComplete ? '<small>Your policy allocation has been updated successfully.</small>' : ''}</span></div>
           </div>` : ''}
@@ -944,8 +962,13 @@ function targetCard() {
       <div class="fund-card-copy"><div class="eyebrow">SWITCH TO</div><h2>${target ? target.name : 'Select a target fund'}</h2>
       ${target ? `<p class="fund-risk-row">${fundRiskTag(target)}</p><div class="fund-value">${money(target.value)}</div><p>Current fund value</p>` : '<p>Choose where your current fund will be switched.</p>'}</div>
       ${selectField({ id: 'target-fund', label: 'Target fund', value: state.targetId, placeholder: 'Choose a fund', options: fundOptions('target'), disabled })}
-      ${requiresSupportingDocuments() ? documentDownloadsPanel() : ''}
+
     </section>`;
+}
+
+function fundDocumentRequirements() {
+  const target = selectedTarget();
+  return `${requiresSupportingDocuments() ? `${state.fundCheck !== 'checking' ? sectionMessage({ type: 'warning', iconName: 'warning', title: 'Risk Profile Update Required', text: `${target.name} (${target.risk}) is more aggressive than ${selectedSource().name} (${selectedSource().risk}). Download and complete the RPQ and IPS, then upload both before continuing.`, className: 'risk-documents-banner' }) : ''}${documentDownloadsPanel()}` : ''}`;
 }
 
 function currentPortfolio() {
@@ -1012,6 +1035,7 @@ function riskRequirementsPanel() {
 }
 
 function switchSummary(forReview = false) {
+  if (!forReview && state.fundCheck === 'checking') return fundSectionSkeleton('summary');
   if (!forReview && (!state.sourceId || !state.targetId || !meetsMinimumSwitch() || !fullAllocationReady())) return '';
   const sources = selectedSources();
   const allocation = selectedSourceAllocation();
@@ -1033,12 +1057,22 @@ const documentDefinitions = {
   ips: { label: 'Investment Policy Statement (IPS)', file: 'output/pdf/investment-policy-statement-20250401.pdf' },
 };
 
+function fundSectionSkeleton(kind) {
+  const downloads = kind === 'downloads';
+  return `<section class="${downloads ? 'document-downloads' : 'switch-summary'} fund-section-skeleton" role="status" aria-busy="true" aria-label="${downloads ? 'Loading download forms' : 'Loading fund switch summary'}">
+    <span class="visually-hidden">${downloads ? 'Loading download forms' : 'Loading fund switch summary'}</span>
+    <div aria-hidden="true"><span class="skeleton-line skeleton-heading"></span><span class="skeleton-line skeleton-description"></span>
+    ${downloads ? '<div class="skeleton-form-row"><span class="skeleton-line"></span><span class="skeleton-button"></span></div><div class="skeleton-form-row"><span class="skeleton-line"></span><span class="skeleton-button"></span></div>' : '<div class="skeleton-summary-table"><span class="skeleton-line"></span><span class="skeleton-line"></span><span class="skeleton-line"></span><span class="skeleton-line"></span></div><span class="skeleton-line skeleton-description"></span><span class="skeleton-line skeleton-amount"></span>'}
+    </div></section>`;
+}
+
 function documentDownloadsPanel() {
+  if (state.fundCheck === 'checking') return fundSectionSkeleton('downloads');
   return `<section class="document-downloads" aria-labelledby="document-downloads-title">
     <h2 id="document-downloads-title">Download forms</h2>
     <p>Download and complete the RPQ and IPS. You’ll upload both on the next screen.</p>
     <div class="document-download-list">${Object.entries(documentDefinitions).map(([kind, document]) => `
-      <div class="document-download-row"><span class="document-file-icon">${icon('picture_as_pdf')}</span><span><strong>${document.label}</strong><small>PDF</small></span><a class="document-download-action" href="${document.file}" download aria-label="Download ${document.label}" title="Download ${document.label}">${icon('download')}</a></div>`).join('')}</div>
+      <div class="document-download-row"><span class="document-file-icon">${icon('picture_as_pdf')}</span><span><strong>${document.label}</strong><small>PDF</small></span><a class="document-download-action" data-action="download-form" href="${document.file}" download aria-label="Download ${document.label}" title="Download ${document.label}">${icon('download')}</a></div>`).join('')}</div>
   </section>`;
 }
 
@@ -1047,17 +1081,18 @@ function uploadDocumentCard(kind, document) {
   const uploaded = upload.status === 'uploaded';
   const selected = upload.status === 'selected';
   const uploading = upload.status === 'uploading';
-  return `<section class="document-upload-card ${uploaded ? 'is-uploaded' : ''}" aria-labelledby="upload-${kind}-title">
+  const error = upload.status.startsWith('error');
+  const errorCopy = { error: 'We couldn’t upload your document. Please try again.', 'error-type': 'File type not supported. Please upload a JPG, PNG, or PDF.', 'error-size': 'File exceeds the 5 MB limit. Please upload a smaller file.' };
+  const resetButton = `<button class="document-upload-reset" type="button" data-action="${upload.status === 'error' ? 'retry-upload' : 'remove-upload'}" data-document-kind="${kind}" aria-label="${uploaded ? 'Reset' : 'Retry'} ${document.label}">${icon('refresh')}</button>`;
+  return `<section class="document-upload-card ${uploaded ? 'is-uploaded' : ''} ${error ? 'has-error' : ''}" aria-labelledby="upload-${kind}-title">
     <h2 id="upload-${kind}-title">${document.label}</h2>
     <input class="visually-hidden document-file-input" type="file" id="upload-${kind}" data-document-kind="${kind}" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" aria-label="Select ${document.label} file" />
-    <div class="document-upload-box" role="status">
+    <div class="document-upload-box ${uploading ? 'is-uploading' : ''}" role="${error ? 'alert' : 'status'}" aria-live="polite" ${uploading ? 'aria-busy="true"' : ''}>
+      ${uploading ? `<div class="document-upload-inflight"><div class="document-upload-file-row"><span class="document-upload-icon">${icon('draft')}</span><span class="document-upload-filename" title="${escapeHtml(upload.name)}">${escapeHtml(upload.name)}</span><button class="document-upload-reset" type="button" data-action="remove-upload" data-document-kind="${kind}" aria-label="Cancel ${document.label} upload">${icon('cancel')}</button></div><div class="document-upload-progress-row"><div class="document-upload-progress" role="progressbar" aria-label="Uploading ${document.label}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${upload.progress || 0}"><span style="width:${upload.progress || 0}%"></span></div><span>${upload.progress || 0}%</span></div></div>` : `
       <span class="document-upload-icon">${icon(uploaded ? 'check_circle' : 'draft')}</span>
-      <span class="document-upload-info">${selected || uploading || uploaded ? `<strong>${escapeHtml(upload.name)}</strong>` : '<span>JPG, PDF or PNG (Maximum of 5MB)</span>'}${uploading ? '<small>Uploading…</small>' : uploaded ? '<small>File uploaded</small>' : ''}</span>
-      ${selected ? `<button class="icon-button" type="button" data-action="remove-upload" data-document-kind="${kind}" aria-label="Remove selected ${document.label}">${icon('delete')}</button>` : ''}
-      ${uploading ? '<span class="document-upload-spinner" aria-hidden="true"></span>' : ''}
-      ${!uploading ? `<button class="document-upload-button" type="button" data-action="${selected ? 'confirm-upload' : 'select-upload'}" data-document-kind="${kind}" aria-label="${uploaded ? `Replace ${document.label}` : selected ? `Upload ${document.label}` : `Select ${document.label} file`}">${icon(selected ? 'upload' : 'upload')}${uploaded ? 'Replace File' : selected ? 'Upload' : 'Select File'}</button>` : ''}
+      <span class="document-upload-info">${uploaded || error ? `<strong>${uploaded ? 'File Uploaded' : 'Upload Failed'}</strong><small ${uploaded ? `title="${escapeHtml(upload.name)}"` : ''}>${uploaded ? escapeHtml(upload.name) : errorCopy[upload.status]}</small>` : selected ? `<span title="${escapeHtml(upload.name)}">${escapeHtml(upload.name)}</span>` : '<span>JPG, PDF or PNG (Maximum of 5MB)</span>'}</span>
+      ${uploaded || error ? resetButton : `${selected ? `<button class="document-upload-delete" type="button" data-action="remove-upload" data-document-kind="${kind}" aria-label="Remove selected ${document.label}">${icon('delete')}</button>` : ''}<button class="document-upload-button" type="button" data-action="${selected ? 'confirm-upload' : 'select-upload'}" data-document-kind="${kind}" aria-label="${selected ? `Upload ${document.label}` : `Select ${document.label} file`}">${icon('upload')}<span>${selected ? 'Upload' : 'Select File'}</span></button>`}`}
     </div>
-    ${uploading ? '<div class="document-upload-progress"><span></span></div>' : ''}
   </section>`;
 }
 
@@ -1072,8 +1107,8 @@ function documentsView() {
 function fundsView() {
   const requirements = sectionMessage({ type: 'info', iconName: 'info', title: 'Fund Switch Requirements', text: 'Move all selected funds to one fund in the same currency. No partial switches or reallocations. Minimum: ₱10,000 or US$500.', className: 'fund-requirements-banner' });
   const incomeBlockedNotice = requiresFullAllocationSwitch() && !canReachFullAllocation() ? incomePayingPanel() : '';
-  const body = `${requirements}${currentPortfolio()}<div class="switch-grid">${sourceCard()}<div class="switch-arrow" aria-hidden="true">${sharpIcon('arrow_forward')}</div>${targetCard()}</div>${incomeBlockedNotice}${incomeSourceNotice()}${switchSummary()}`;
-  const ready = state.sourceId && state.targetId && meetsMinimumSwitch() && fullAllocationReady();
+  const body = `${requirements}${currentPortfolio()}<div class="switch-grid">${sourceCard()}<div class="switch-arrow" aria-hidden="true">${sharpIcon('arrow_forward')}</div>${targetCard()}</div>${fundDocumentRequirements()}${incomeBlockedNotice}${incomeSourceNotice()}${switchSummary()}`;
+  const ready = state.sourceId && state.targetId && meetsMinimumSwitch() && fullAllocationReady() && state.fundCheck !== 'checking';
   return flowLayout({
     active: 2,
     title: 'Switch your fund',
@@ -1185,11 +1220,40 @@ function closeWaiverModal() {
   waiverReturnFocus = null;
 }
 
+let waiverTermsReturnFocus = null;
+function openWaiverTerms() {
+  waiverTermsReturnFocus = document.activeElement;
+  document.body.classList.add('terms-open');
+  dialogRoot.innerHTML = `
+    <div class="modal-backdrop terms-backdrop">
+      <section class="modal waiver-modal terms-modal" role="dialog" aria-modal="true" aria-labelledby="waiver-terms-title" aria-describedby="waiver-terms-subtitle" tabindex="-1">
+        <header class="terms-header"><div><h2 id="waiver-terms-title">Terms and Conditions</h2><p id="waiver-terms-subtitle">Fund Switch Waiver</p></div><button class="icon-button" type="button" data-action="close-waiver-terms" aria-label="Close terms and conditions">${icon('close')}</button></header>
+        <div class="terms-body" tabindex="0" role="region" aria-label="Fund switch waiver terms">
+          <ol class="terms-sections">
+            <li><h3>Change in Risk Level</h3><p>The selected fund has a different risk and return profile than your current holding.</p></li>
+            <li><h3>Switching to a Higher-Risk Fund</h3><p>May offer higher potential long-term returns, but exposes your investment to greater market volatility and a higher risk of capital loss.</p></li>
+            <li><h3>Switching to a Lower-Risk Fund</h3><p>Offers greater capital preservation or stability, but may yield lower long-term returns that might not keep pace with inflation.</p></li>
+            <li><h3>Risk Tolerance Alignment</h3><p>Ensure this switch remains aligned with your overall investment objectives, time horizon, and personal risk tolerance.</p></li>
+            <li><h3>No Guarantee of Returns</h3><p>Past performance of either fund is no guarantee or indicator of future results. Investment values fluctuate, and you may receive back less than your original investment.</p></li>
+          </ol>
+        </div>
+        <footer class="terms-footer"><button class="btn btn-primary" type="button" data-action="close-waiver-terms">Close</button></footer>
+      </section>
+    </div>`;
+  dialogRoot.querySelector('[role="dialog"]').focus({ preventScroll: true });
+}
+
+function closeWaiverTerms() {
+  closeModal();
+  if (waiverTermsReturnFocus?.isConnected) waiverTermsReturnFocus.focus({ preventScroll: true });
+  waiverTermsReturnFocus = null;
+}
+
 function reviewView() {
   const body = `
     ${switchSummary(true)}
-    ${requiresSupportingDocuments() ? `<p class="review-documents-note">${icon('check_circle')} RPQ and IPS uploaded.</p>` : ''}
-    <label class="ack-row"><input id="review-ack" type="checkbox" ${state.acknowledged ? 'checked' : ''}/><span>I confirm that I have reviewed the details above and understood that fund values may fluctuate.</span></label>`;
+    ${state.waiverAccepted ? '' : sectionMessage({ type: 'warning', iconName: 'warning', title: 'Fund Switch Waiver', text: 'The selected fund may have a different risk and return profile from your current holding and may not match your risk profile.', className: 'review-waiver-banner' })}
+    <div class="ack-row review-confirmation"><input id="review-waiver-ack" type="checkbox" required ${state.waiverAccepted ? 'checked' : ''} aria-labelledby="review-waiver-label"/><label id="review-waiver-label" for="review-waiver-ack">I confirm that I have reviewed my fund switch details, understand the risks, and agree to the <button class="waiver-terms-link" type="button" data-action="open-waiver-terms">terms and conditions</button>.</label></div>`;
   return flowLayout({
     active: 3,
     title: 'Review your fund switch',
@@ -1198,7 +1262,7 @@ function reviewView() {
     backAction: requiresSupportingDocuments() ? 'back-documents' : 'back-funds',
     nextAction: 'submit-request',
     nextLabel: state.submitting ? loadingIndicator('Submitting your request') : 'Submit',
-    nextDisabled: !state.acknowledged || (requiresSupportingDocuments() && !documentsUploaded()) || state.submitting,
+    nextDisabled: !state.waiverAccepted || (requiresSupportingDocuments() && !documentsUploaded()) || state.submitting,
     nextBusy: state.submitting,
   });
 }
@@ -1229,7 +1293,7 @@ function render({ focus = true } = {}) {
   const publicMode = state.screen === 'login';
   document.body.classList.toggle('public-mode', publicMode);
   document.body.classList.toggle('account-mode', !publicMode);
-  scenarioGuideButton.hidden = publicMode;
+  scenarioGuideButton.hidden = publicMode || scenarioGuideHidden;
   document.querySelectorAll('.main-nav [data-nav]').forEach((button) => {
     const current = button.dataset.nav === state.activeNav;
     button.classList.toggle('active', current);
@@ -1289,13 +1353,19 @@ function riskResultCopy(profile) {
   return 'Your answers suggest you’re comfortable with significant market fluctuations in pursuit of long-term growth.';
 }
 
-function openSaveDraftModal() {
+let draftReturnFocus = null;
+let draftOpenedFromDownload = false;
+const draftStorageKey = 'fund-switch-prototype-draft-v1';
+
+function openSaveDraftModal({ fromDownload = false } = {}) {
   if (!state.policyId) return;
+  draftReturnFocus = document.activeElement;
+  draftOpenedFromDownload = fromDownload;
   dialogRoot.innerHTML = `
     <div class="modal-backdrop draft-backdrop">
-      <section class="modal draft-modal" role="dialog" aria-modal="true" aria-labelledby="draft-modal-title">
+      <section class="modal draft-modal" role="dialog" aria-modal="true" aria-labelledby="draft-modal-title" tabindex="-1">
         <div class="draft-modal-header"><h2 id="draft-modal-title">Save your request as draft?</h2><button class="icon-button" type="button" data-action="cancel-save-draft" aria-label="Close save draft confirmation">${icon('close')}</button></div>
-        <p>Your progress will be saved so you can continue your request later. You can access your draft anytime from the Services section.</p>
+        <p>${fromDownload ? 'Your download has started. You’ll need to complete the RPQ and IPS outside the portal, then return to upload both. Save your progress before you leave so you can continue from My Requests in Services.' : 'Your progress will be saved so you can continue your request later. You can access your draft anytime from the Services section.'}</p>
         <footer class="draft-modal-actions"><button class="btn btn-tertiary" type="button" data-action="cancel-save-draft">Cancel</button><button class="btn btn-primary" type="button" data-action="confirm-save-draft">Confirm</button></footer>
       </section>
     </div>`;
@@ -1304,16 +1374,39 @@ function openSaveDraftModal() {
 
 function restoreDraftReturnContext() {
   closeModal();
+  if (draftReturnFocus?.isConnected) draftReturnFocus.focus({ preventScroll: true });
+  draftReturnFocus = null;
+  draftOpenedFromDownload = false;
 }
 
 function confirmSaveDraft() {
+  const stayForDownloads = draftOpenedFromDownload;
+  const draft = {
+    requestStatus: 'Draft', requestPolicyId: state.policyId, draftResumeScreen: state.screen,
+    policyId: state.policyId, sourceId: state.sourceId, targetId: state.targetId,
+    additionalSourceIds: [...state.additionalSourceIds], fundCheck: 'complete',
+    documentUploads: Object.fromEntries(Object.entries(state.documentUploads).map(([kind, upload]) => [kind, upload.status === 'uploaded' ? { status: 'uploaded', name: upload.name } : { status: 'empty', name: '' }])),
+  };
+  try { localStorage.setItem(draftStorageKey, JSON.stringify(draft)); }
+  catch { showToast('Your draft could not be saved. Please try again before leaving.'); return; }
   state.requestStatus = 'Draft';
   state.requestPolicyId = state.policyId;
   state.draftResumeScreen = state.screen;
-  state.screen = 'services';
-  closeModal();
-  render();
+  state.prototypeScenarioId = '';
+  setScenarioUrl();
+  if (stayForDownloads) restoreDraftReturnContext();
+  else { state.screen = 'services'; closeModal(); render(); }
   showToast('Your Fund Switch request was saved as a draft.');
+}
+
+function restoreLocalDraft() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(draftStorageKey));
+    if (!saved || saved.requestStatus !== 'Draft' || !policies.some(policy => policy.id === saved.policyId)) return false;
+    state = { ...initialState(), ...saved, loggedIn: true, activeNav: 'Services', screen: 'services', waiverAccepted: false };
+    render();
+    return true;
+  } catch { return false; }
 }
 
 function resumeSavedRequest() {
@@ -1326,13 +1419,14 @@ function resumeSavedRequest() {
 }
 
 function submitRequest() {
-  if (!state.acknowledged || (requiresSupportingDocuments() && !documentsUploaded()) || state.submitting) return;
+  if (!state.waiverAccepted || (requiresSupportingDocuments() && !documentsUploaded()) || state.submitting) return;
   state.submitting = true;
   render({ focus: false });
   clearTimeout(submissionTimer);
   submissionTimer = window.setTimeout(() => {
     state.submitting = false;
     state.requestStatus = 'Submitted';
+    try { localStorage.removeItem(draftStorageKey); } catch {}
     state.requestPolicyId = state.policyId;
     closeModal();
     state.screen = 'success';
@@ -1417,7 +1511,7 @@ function closeFundFactsheet() {
 
 function closeModal() {
   dialogRoot.innerHTML = '';
-  document.body.classList.remove('drawer-open', 'factsheet-open');
+  document.body.classList.remove('drawer-open', 'factsheet-open', 'terms-open');
   scenarioGuideButton.setAttribute('aria-expanded', 'false');
 }
 
@@ -1427,7 +1521,7 @@ function openNonVulPolicyModal() {
   dialogRoot.innerHTML = `
     <div class="modal-backdrop">
       <section class="modal eligibility-modal" role="dialog" aria-modal="true" aria-labelledby="eligibility-title" tabindex="-1">
-        <div class="modal-header"><div class="eligibility-title"><span class="eligibility-icon">${icon('policy')}</span><h2 id="eligibility-title">Fund Switch isn’t available for this policy</h2></div><button class="icon-button" type="button" data-action="choose-another-policy" aria-label="Close and choose another policy">${icon('close')}</button></div>
+        <div class="modal-header"><div class="eligibility-title"><span class="eligibility-icon">${icon('policy')}</span><h2 id="eligibility-title">Fund Switch Unavailable</h2></div><button class="icon-button" type="button" data-action="choose-another-policy" aria-label="Close and choose another policy">${icon('close')}</button></div>
         <p><strong>Dream Builder</strong> is a traditional life policy, so it doesn’t have investment funds to switch.</p>
         <div class="section-message eligibility-guidance"><span>${icon('lightbulb')}</span><div><span>You can explore VUL products without changing your current policy or starting an application.</span></div></div>
         <footer class="modal-actions"><button class="btn btn-tertiary" type="button" data-action="close-non-vul-modal">Cancel</button><button class="btn btn-primary" type="button" data-action="explore-vul-policies">Explore VUL products</button></footer>
@@ -1475,8 +1569,16 @@ function setTargetFund(value) {
   if (changed) {
     resetTargetSuitability();
   }
-  state.fundCheck = 'complete';
+  clearTimeout(fundCheckTimer);
+  state.fundCheck = value && changed ? 'checking' : 'complete';
   render({ focus: false });
+  if (state.fundCheck === 'checking') {
+    fundCheckTimer = window.setTimeout(() => {
+      if (state.targetId !== value) return;
+      state.fundCheck = 'complete';
+      render({ focus: false });
+    }, 1000);
+  }
 }
 
 document.addEventListener('change', (event) => {
@@ -1495,14 +1597,19 @@ document.addEventListener('change', (event) => {
     if (!file || !documentDefinitions[kind]) return;
     const validType = /\.(pdf|png|jpe?g)$/i.test(file.name) && (!file.type || ['application/pdf', 'image/png', 'image/jpeg'].includes(file.type));
     if (!validType || file.size > 5 * 1024 * 1024) {
-      state.documentError = validType ? 'Choose a file under 5 MB.' : 'Choose a PDF, JPG, or PNG file.';
+      clearTimeout(documentUploadTimers[kind]);
+      state.documentUploads[kind] = { status: validType ? 'error-size' : 'error-type', name: file.name };
+      state.acknowledged = false;
+      state.waiverAccepted = false;
       render({ focus: false });
       return;
     }
     clearTimeout(documentUploadTimers[kind]);
     state.documentError = '';
     state.documentUploads[kind] = { status: 'selected', name: file.name };
-    startDocumentUpload(kind);
+    state.acknowledged = false;
+    state.waiverAccepted = false;
+    render({ focus: false });
   }
   if (target.name && target.name.startsWith('rpq-')) {
     state.rpqAnswers[target.name.replace('rpq-', '')] = target.value;
@@ -1518,7 +1625,11 @@ document.addEventListener('change', (event) => {
     const continueButton = dialogRoot.querySelector('[data-action="continue-waiver"]');
     if (continueButton) continueButton.disabled = !state.waiverAcknowledged;
   }
-  if (target.id === 'review-ack') { state.acknowledged = target.checked; render({ focus: false }); }
+  if (target.id === 'review-waiver-ack') {
+    state.waiverAccepted = target.checked;
+    render({ focus: false });
+    app.querySelector('#review-waiver-ack')?.focus({ preventScroll: true });
+  }
 });
 
 document.addEventListener('input', (event) => {
@@ -1599,6 +1710,8 @@ document.addEventListener('click', (event) => {
   }
   if (control.disabled) return;
   const action = control.dataset.action;
+  if (action === 'open-waiver-terms') { openWaiverTerms(); return; }
+  if (action === 'close-waiver-terms') { closeWaiverTerms(); return; }
   if (action === 'brand-home') {
     closeModal();
     if (state.loggedIn) { state.screen = 'dashboard'; state.activeNav = 'Dashboard'; }
@@ -1648,7 +1761,14 @@ document.addEventListener('click', (event) => {
     const kind = control.dataset.documentKind;
     clearTimeout(documentUploadTimers[kind]);
     state.documentUploads[kind] = { status: 'empty', name: '' };
+    state.acknowledged = false;
+    state.waiverAccepted = false;
     render({ focus: false });
+    return;
+  }
+  if (action === 'retry-upload') {
+    const kind = control.dataset.documentKind;
+    if (state.documentUploads[kind]?.status === 'error') startDocumentUpload(kind);
     return;
   }
   if (action === 'confirm-upload') {
@@ -1737,7 +1857,7 @@ document.addEventListener('click', (event) => {
     render();
   }
   if (action === 'continue-fund-switch') {
-    if (!state.sourceId || !state.targetId || !meetsMinimumSwitch() || !fullAllocationReady()) return;
+    if (!state.sourceId || !state.targetId || !meetsMinimumSwitch() || !fullAllocationReady() || state.fundCheck === 'checking') return;
     state.screen = requiresSupportingDocuments() ? 'documents' : 'review';
     render();
   }
@@ -1747,6 +1867,7 @@ document.addEventListener('click', (event) => {
   if (action === 'submit-request') submitRequest();
   if (action === 'back-review') { state.screen = 'review'; render(); }
   if (action === 'preview-document') openDocumentPreview();
+  if (action === 'download-form') { openSaveDraftModal({ fromDownload: true }); return; }
   if (action === 'save-draft') openSaveDraftModal();
   if (action === 'cancel-save-draft') restoreDraftReturnContext();
   if (action === 'confirm-save-draft') confirmSaveDraft();
@@ -1765,6 +1886,30 @@ window.addEventListener('resize', sizePortfolioOverlay);
 window.addEventListener('scroll', sizePortfolioOverlay, { passive: true });
 
 document.addEventListener('keydown', (event) => {
+  const isEditing = event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])');
+  if (event.ctrlKey && event.shiftKey && !event.altKey && !event.metaKey && event.code === 'KeyG' && !isEditing) {
+    event.preventDefault();
+    if (event.repeat) return;
+    const guideHadFocus = scenarioGuideButton === document.activeElement || dialogRoot.querySelector('.scenario-guide-popover')?.contains(document.activeElement);
+    scenarioGuideHidden = !scenarioGuideHidden;
+    try { sessionStorage.setItem(scenarioGuideVisibilityKey, String(scenarioGuideHidden)); } catch {}
+    if (scenarioGuideHidden) closeScenarioGuide({ restoreFocus: false });
+    scenarioGuideButton.hidden = state.screen === 'login' || scenarioGuideHidden;
+    if (guideHadFocus && scenarioGuideHidden) {
+      const heading = app.querySelector('h1');
+      heading?.setAttribute('tabindex', '-1');
+      heading?.focus({ preventScroll: true });
+    }
+    return;
+  }
+  const termsDialog = dialogRoot.querySelector('#waiver-terms-title')?.closest('[role="dialog"]') || dialogRoot.querySelector('.draft-modal');
+  if (termsDialog && event.key === 'Tab') {
+    const controls = [...termsDialog.querySelectorAll('button, a[href], input, [tabindex="0"]')].filter((element) => !element.disabled);
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === termsDialog)) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && (document.activeElement === last || document.activeElement === termsDialog)) { event.preventDefault(); first?.focus(); }
+  }
   const serviceCard = event.target.closest?.('.service-card[data-service]');
   if (serviceCard && (event.key === 'Enter' || event.key === ' ')) {
     event.preventDefault();
@@ -1773,6 +1918,7 @@ document.addEventListener('keydown', (event) => {
   }
   if (event.key === 'Escape' && !mobileNav.hidden) closeMobileNav();
   else if (event.key === 'Escape' && dialogRoot.querySelector('.scenario-guide-popover')) closeScenarioGuide();
+  else if (event.key === 'Escape' && dialogRoot.querySelector('#waiver-terms-title')) closeWaiverTerms();
   else if (event.key === 'Escape' && dialogRoot.querySelector('.waiver-modal')) closeWaiverModal();
   else if (event.key === 'Escape' && dialogRoot.querySelector('.draft-modal')) restoreDraftReturnContext();
   else if (event.key === 'Escape' && dialogRoot.querySelector('.factsheet-backdrop')) closeFundFactsheet();
@@ -1786,4 +1932,4 @@ document.addEventListener('keydown', (event) => {
 });
 
 const initialScenarioId = new URLSearchParams(window.location.search).get('scenario');
-if (!launchPrototypeScenario(initialScenarioId, { updateUrl: false })) render();
+if (!launchPrototypeScenario(initialScenarioId, { updateUrl: false }) && !restoreLocalDraft()) render();
