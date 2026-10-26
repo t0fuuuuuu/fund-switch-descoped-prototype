@@ -476,12 +476,16 @@ function resetTargetSuitability() {
   resetDocuments();
 }
 
-function showToast(message) {
+function showToast(message, { success = false, duration = 2600 } = {}) {
   clearTimeout(toastTimer);
-  toast.textContent = message;
+  toast.classList.toggle('toast-success', success);
+  if (success) {
+    toast.innerHTML = `<span class="toast-success-icon" aria-hidden="true">${icon('check_circle')}</span><span class="toast-copy"><strong>Draft Saved</strong><span>${escapeHtml(message)}</span></span><button class="toast-dismiss" type="button" data-action="dismiss-toast" aria-label="Dismiss draft saved notification">${icon('close')}</button>`;
+  } else toast.textContent = message;
   toast.classList.add('show');
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
 }
+
 
 function focusPage() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1364,9 +1368,9 @@ function openSaveDraftModal({ fromDownload = false } = {}) {
   dialogRoot.innerHTML = `
     <div class="modal-backdrop draft-backdrop">
       <section class="modal draft-modal" role="dialog" aria-modal="true" aria-labelledby="draft-modal-title" tabindex="-1">
-        <div class="draft-modal-header"><h2 id="draft-modal-title">Save your request as draft?</h2><button class="icon-button" type="button" data-action="cancel-save-draft" aria-label="Close save draft confirmation">${icon('close')}</button></div>
-        <p>${fromDownload ? 'Your download has started. You’ll need to complete the RPQ and IPS outside the portal, then return to upload both. Save your progress before you leave so you can continue from My Requests in Services.' : 'Your progress will be saved so you can continue your request later. You can access your draft anytime from the Services section.'}</p>
-        <footer class="draft-modal-actions"><button class="btn btn-tertiary" type="button" data-action="cancel-save-draft">Cancel</button><button class="btn btn-primary" type="button" data-action="confirm-save-draft">Confirm</button></footer>
+        <div class="draft-modal-header"><h2 id="draft-modal-title">Save as Draft?</h2><button class="icon-button" type="button" data-action="cancel-save-draft" aria-label="Close save draft confirmation">${icon('close')}</button></div>
+        <p>${fromDownload ? 'Complete the RPQ and IPS, then return to upload both. Save your progress to continue later from My Requests in Services.' : 'Save your progress and continue later from My Requests in Services.'}</p>
+        <footer class="draft-modal-actions"><button class="btn btn-tertiary" type="button" data-action="cancel-save-draft">Cancel</button><button class="btn btn-primary" type="button" data-action="confirm-save-draft">Save Draft</button></footer>
       </section>
     </div>`;
   dialogRoot.querySelector('.draft-modal').focus?.();
@@ -1396,7 +1400,14 @@ function confirmSaveDraft() {
   setScenarioUrl();
   if (stayForDownloads) restoreDraftReturnContext();
   else { state.screen = 'services'; closeModal(); render(); }
-  showToast('Your Fund Switch request was saved as a draft.');
+  showToast('Continue from My Requests in Services.', { success: true, duration: 6000 });
+}
+
+function hardRestartPrototype() {
+  try { localStorage.removeItem(draftStorageKey); }
+  catch { showToast('Could not clear the saved draft. Please try restarting again.'); return; }
+  // Reload the entry URL to discard all in-memory progress and pending timers.
+  window.location.replace(new URL(window.location.pathname, window.location.origin).href);
 }
 
 function restoreLocalDraft() {
@@ -1867,6 +1878,7 @@ document.addEventListener('click', (event) => {
   if (action === 'submit-request') submitRequest();
   if (action === 'back-review') { state.screen = 'review'; render(); }
   if (action === 'preview-document') openDocumentPreview();
+  if (action === 'dismiss-toast') { clearTimeout(toastTimer); toast.classList.remove('show'); return; }
   if (action === 'download-form') { openSaveDraftModal({ fromDownload: true }); return; }
   if (action === 'save-draft') openSaveDraftModal();
   if (action === 'cancel-save-draft') restoreDraftReturnContext();
@@ -1887,6 +1899,11 @@ window.addEventListener('scroll', sizePortfolioOverlay, { passive: true });
 
 document.addEventListener('keydown', (event) => {
   const isEditing = event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])');
+  if (event.ctrlKey && event.shiftKey && !event.altKey && !event.metaKey && event.code === 'KeyH') {
+    event.preventDefault();
+    if (!event.repeat && !isEditing) hardRestartPrototype();
+    return;
+  }
   if (event.ctrlKey && event.shiftKey && !event.altKey && !event.metaKey && event.code === 'KeyG' && !isEditing) {
     event.preventDefault();
     if (event.repeat) return;

@@ -1250,3 +1250,16 @@ body.terms-open { overflow: hidden; }
   .terms-footer { padding: 16px 20px; }
   .terms-footer .btn { width: 100%; }
 }
+
+/* Draft success feedback stays clear of the page's fixed action buttons. */
+.toast.toast-success { align-items: flex-start; background: #fff; border: 1px solid #c8dfb9; border-left: 4px solid #47830f; border-radius: 10px; bottom: auto; top: 80px; box-shadow: 0 8px 24px rgba(16,24,40,.14); color: #364154; display: flex; gap: 12px; max-width: calc(100% - 32px); padding: 16px; width: 400px; z-index: 70; }
+.toast.toast-success.show { pointer-events: auto; }
+.toast-success-icon { color: #47830f; display: flex; flex: 0 0 24px; }
+.toast-success-icon .material-symbols-rounded { font-size: 24px; font-variation-settings: 'FILL' 1; }
+.toast-copy { display: grid; flex: 1; gap: 4px; min-width: 0; }
+.toast-copy strong { font-size: 16px; line-height: 24px; }
+.toast-copy > span { color: #667085; font-size: 14px; line-height: 20px; }
+.toast-dismiss { align-items: center; background: none; border: 0; color: #667085; cursor: pointer; display: flex; flex: 0 0 24px; height: 24px; justify-content: center; padding: 0; width: 24px; }
+.toast-dismiss .material-symbols-rounded { font-size: 20px; }
+@media (max-width: 760px) { .toast.toast-success { top: 88px; } }
+@media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
