@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="874" height="124" viewBox="0 0 874 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Mask group">
+<mask id="mask0_0_4" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="874" height="124">
+<rect id="base" width="874" height="124" rx="8" fill="#A82675"/>
+</mask>
+<g mask="url(#mask0_0_4)">
+<ellipse id="Ellipse 657" cx="101.763" cy="105.32" rx="101.763" ry="105.32" transform="matrix(0.97222 -0.234067 0.234574 0.972098 684.784 -0.361328)" fill="#3A1971"/>
+<ellipse id="Ellipse 658" cx="12.2615" cy="12.6901" rx="12.2615" ry="12.6901" transform="matrix(0.97222 -0.234067 0.234574 0.972098 662.758 81.7402)" fill="#99BA3A"/>
+<ellipse id="Ellipse 659" cx="23.4615" cy="24.2825" rx="23.4615" ry="24.2825" transform="matrix(0.964445 -0.264286 0.264849 0.96429 642.207 20.9922)" fill="#F99F1B"/>
+</g>
+</g>
+</svg>
