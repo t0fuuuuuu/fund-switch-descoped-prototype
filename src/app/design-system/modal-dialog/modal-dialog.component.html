@@ -1,0 +1,33 @@
+<section
+  class="ds-modal-dialog"
+  [ngClass]="modalDialogClasses"
+  role="dialog"
+  tabindex="-1"
+  [class]="panelClass"
+  [attr.aria-label]="ariaLabel || null"
+  [attr.aria-labelledby]="ariaLabelledby || null"
+  [attr.aria-describedby]="ariaDescribedby || null"
+  [attr.aria-modal]="ariaModal ? 'true' : null"
+  [attr.data-size]="size"
+  [attr.data-alignment]="alignment">
+  <div class="ds-modal-dialog__content">
+    <ng-content></ng-content>
+  </div>
+
+  <div *ngIf="hasActions" class="ds-modal-dialog__actions">
+    <ng-content select="[dsModalDialogActions]"></ng-content>
+  </div>
+
+  <ds-button
+    *ngIf="isDismissible"
+    class="ds-modal-dialog__dismiss"
+    [label]="''"
+    [variant]="DsButtonVariant.Subtle"
+    [emphasis]="DsButtonEmphasis.TRANSPARENT"
+    [size]="dismissButtonSize"
+    [leftIcon]="'close'"
+    [ariaLabel]="'Close dialog'"
+    [iconFill]="false"
+    (clicked)="dismiss($event)">
+  </ds-button>
+</section>

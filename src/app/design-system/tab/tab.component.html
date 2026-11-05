@@ -1,0 +1,19 @@
+<button
+  type="button"
+  class="ds-tab"
+  [class.ds-tab--medium]="size === 'medium'"
+  [class.ds-tab--selected]="isSelected"
+  [class.ds-tab--disabled]="disabled"
+  [disabled]="disabled"
+  [attr.aria-selected]="isSelected"
+  [attr.tabindex]="isSelected ? 0 : -1"
+  role="tab"
+  (click)="onSelect()">
+  <span class="ds-tab__label">
+    <span *ngIf="showStatusIcon" class="ds-tab__icon material-symbols-rounded" [style.font-variation-settings]="iconFontVariation" aria-hidden="true">{{ statusIcon }}</span>
+    <span>{{ label }}</span>
+    <span *ngIf="showIndicator" class="ds-tab__indicator" aria-hidden="true">•</span>
+    <span *ngIf="showBadge" class="ds-tab__badge">{{ badge }}</span>
+    <span *ngIf="showDisclosureIcon" class="ds-tab__icon material-symbols-rounded" [style.font-variation-settings]="iconFontVariation" aria-hidden="true">{{ disclosureIcon }}</span>
+  </span>
+</button>

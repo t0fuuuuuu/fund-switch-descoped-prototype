@@ -1,0 +1,262 @@
+<section class="portal-layout" aria-labelledby="policy-details-title">
+  <aside class="portal-sidebar">
+    <section class="portal-profile-card">
+      <span class="portal-avatar" aria-hidden="true">E</span>
+      <h2>Welcome Elizabeth!</h2>
+      <p>
+        <span class="material-symbols-rounded" aria-hidden="true">call</span>
+        +63 917 132 3456
+      </p>
+      <p>
+        <span class="material-symbols-rounded" aria-hidden="true">mail</span>
+        elizabethdelacruz&#64;domain.com
+      </p>
+    </section>
+    <section class="portal-toolkit" aria-labelledby="portal-toolkit-title">
+      <h2 id="portal-toolkit-title">Toolkit</h2>
+      <button type="button" data-action="toolkit-info">
+        Policy Change and Payment Forms<span
+          class="material-symbols-rounded"
+          aria-hidden="true"
+          >arrow_forward</span
+        ></button
+      ><button type="button" data-action="toolkit-info">
+        Policy Fund Value Management<span
+          class="material-symbols-rounded"
+          aria-hidden="true"
+          >arrow_forward</span
+        ></button
+      ><button type="button" data-action="toolkit-info">
+        Policy Cancellation and Reinstatement<span
+          class="material-symbols-rounded"
+          aria-hidden="true"
+          >arrow_forward</span
+        ></button
+      ><button type="button" data-action="toolkit-info">
+        Policy Claim Forms<span
+          class="material-symbols-rounded"
+          aria-hidden="true"
+          >arrow_forward</span
+        >
+      </button>
+    </section>
+    <section class="portal-care-card" aria-labelledby="portal-care-title">
+      <h2 id="portal-care-title">Customer Care</h2>
+      <p>Need help? Feel free to contact us:</p>
+      <span
+        ><span class="material-symbols-rounded" aria-hidden="true"
+          >language</span
+        >
+        EastWest Ageas Insurance</span
+      >
+      <span
+        ><span class="material-symbols-rounded" aria-hidden="true">call</span>
+        (+632) 8939-3924</span
+      >
+      <span
+        ><span class="material-symbols-rounded" aria-hidden="true">mail</span>
+        AskMe&#64;ewageas.com.ph</span
+      >
+    </section>
+  </aside>
+  <div class="portal-content policy-details-content">
+    @if (m.state.requestStatus === "Completed") {
+    <ds-section-message
+      class="policy-completion-message"
+      appearance="success"
+      size="large"
+      [fullWidth]="true"
+      title="Fund switch completed"
+      [description]="'Completed September 3, 2026 · Request ' + m.state.requestNumber"
+      [isDismissible]="false"
+      [showAction1]="true"
+      [showAction2]="false"
+      label1="View request"
+      (action1Clicked)="viewRequest.emit()"
+    ></ds-section-message>
+    }
+    <header class="policy-details-heading">
+      <div>
+        <h1 id="policy-details-title">
+          Elizabeth’s Policy
+          <span class="material-symbols-rounded" aria-hidden="true"
+            >expand_more</span
+          >
+        </h1>
+        <p>FUTURE ASSURE <span>#810000085627</span></p>
+      </div>
+    </header>
+    <section class="policy-summary-card">
+      <div>
+        <span
+          >Total Sum Insured
+          <span class="material-symbols-rounded" aria-hidden="true"
+            >help</span
+          ></span
+        ><strong>PHP 1,950,000.00</strong>
+      </div>
+      <div>
+        <span
+          >Basic Sum Insured
+          <span class="material-symbols-rounded" aria-hidden="true"
+            >help</span
+          ></span
+        ><strong>PHP 1,950,000.00</strong>
+      </div>
+      <div><span>Portfolio Value</span><strong>PHP 350,000.00</strong></div>
+      <dl>
+        <div>
+          <dt>Policy Number</dt>
+          <dd>810000085627</dd>
+        </div>
+        <div>
+          <dt>
+            Life Insured
+            <span class="material-symbols-rounded" aria-hidden="true"
+              >help</span
+            >
+          </dt>
+          <dd>Elizabeth Garcia Dela Cruz</dd>
+        </div>
+        <div>
+          <dt>
+            Years Payable
+            <span class="material-symbols-rounded" aria-hidden="true"
+              >help</span
+            >
+          </dt>
+          <dd>Pay up to 100 years old</dd>
+        </div>
+        <div>
+          <dt>
+            Coverage Period
+            <span class="material-symbols-rounded" aria-hidden="true"
+              >help</span
+            >
+          </dt>
+          <dd>74 years</dd>
+        </div>
+        <div>
+          <dt>
+            Coverage End Date
+            <span class="material-symbols-rounded" aria-hidden="true"
+              >help</span
+            >
+          </dt>
+          <dd>October 18, 2100</dd>
+        </div>
+      </dl>
+    </section>
+    <section class="policy-section-card">
+      <header>
+        <h2>
+          Riders
+          <span class="material-symbols-rounded" aria-hidden="true">help</span>
+        </h2>
+      </header>
+      <article class="rider-row">
+        <div>
+          <h3>Accidental Death Rider</h3>
+          <span class="rider-status">LAPSED</span>
+        </div>
+        <dl>
+          <div>
+            <dt>
+              Benefit Amount
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              >
+            </dt>
+            <dd>1,950,000.00</dd>
+          </div>
+          <div>
+            <dt>
+              Years Payable
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              >
+            </dt>
+            <dd>Pay up to 65 years old</dd>
+          </div>
+          <div>
+            <dt>
+              Coverage Period
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              >
+            </dt>
+            <dd>39 years</dd>
+          </div>
+          <div>
+            <dt>
+              Coverage End Date
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              >
+            </dt>
+            <dd>October 18, 2065</dd>
+          </div>
+        </dl>
+      </article>
+      <article class="rider-row">
+        <div>
+          <h3>Accidental Disablement Rider</h3>
+          <span class="rider-status">LAPSED</span>
+        </div>
+        <dl>
+          <div>
+            <dt>
+              Benefit Amount
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              >
+            </dt>
+            <dd>1,950,000.00</dd>
+          </div>
+          <div>
+            <dt>
+              Years Payable
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              >
+            </dt>
+            <dd>Pay up to 65 years old</dd>
+          </div>
+          <div>
+            <dt>
+              Coverage Period
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              >
+            </dt>
+            <dd>39 years</dd>
+          </div>
+          <div>
+            <dt>
+              Coverage End Date
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              >
+            </dt>
+            <dd>October 18, 2065</dd>
+          </div>
+        </dl>
+      </article>
+    </section>
+    <section class="policy-section-card beneficiaries-card">
+      <header>
+        <h2>
+          Beneficiaries
+          <span class="material-symbols-rounded" aria-hidden="true">help</span>
+        </h2>
+      </header>
+      <article>
+        <span class="beneficiary-avatar">E</span
+        ><span
+          ><strong>Elizabeth Garcia Dela Cruz</strong
+          ><small>PRIMARY - SELF</small></span
+        ><strong>100.00%</strong>
+      </article>
+    </section>
+  </div>
+</section>

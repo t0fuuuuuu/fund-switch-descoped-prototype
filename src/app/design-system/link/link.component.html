@@ -1,0 +1,19 @@
+<a
+  class="ds-link"
+  [ngClass]="linkClasses"
+  [href]="href"
+  [attr.download]="download === true ? '' : (download || null)"
+  [attr.target]="target || null"
+  [attr.rel]="rel"
+  [attr.aria-label]="ariaLabel || null"
+  [attr.aria-current]="ariaCurrent || null"
+  [attr.data-size]="size"
+  [attr.data-variant]="variant"
+  [attr.data-visual-variant]="visualVariant"
+  [attr.data-strong]="isStrong"
+>
+  <span class="ds-link__label">{{ label }}</span>
+  <span *ngIf="showsIcon" class="ds-link__icon material-symbols-rounded" aria-hidden="true">
+    {{ icon }}
+  </span>
+</a>

@@ -1,0 +1,41 @@
+<div class="modal-backdrop onboarding-backdrop">
+  <ds-modal-dialog
+    class="portal-dialog"
+    panelClass="onboarding-modal"
+    size="large"
+    alignment="right"
+    [isDismissible]="false"
+    [ariaModal]="true"
+    ariaLabelledby="onboarding-title"
+  >
+    <img src="assets/figma-fund-switch-onboarding.png" alt="" />
+    <h2 id="onboarding-title">Introducing Fund Switch</h2>
+    <p>
+      A simpler way to move your investment<br />to another fund that fits your
+      goals.
+    </p>
+    <footer dsModalDialogActions>
+      <ds-button
+        type="button"
+        data-action="skip-onboarding"
+        variant="primary"
+        emphasis="outline"
+        size="medium"
+        [useProjectedContent]="true"
+        label=""
+      >
+        Skip</ds-button
+      ><ds-button
+        type="button"
+        data-action="explore-fund-switch"
+        variant="primary"
+        emphasis="default"
+        size="medium"
+        [useProjectedContent]="true"
+        label=""
+      >
+        See What’s New
+      </ds-button>
+    </footer>
+  </ds-modal-dialog>
+</div>

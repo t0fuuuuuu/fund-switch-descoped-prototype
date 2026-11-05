@@ -1,0 +1,84 @@
+<div class="ds-stepper" [ngClass]="hostClasses">
+  <ol class="ds-stepper__list">
+    <li
+      *ngFor="let step of steps; let index = index"
+      class="ds-stepper__item"
+      [ngClass]="getStepClasses(step, index)"
+      [attr.data-state]="getStepVisualState(step, index)"
+    >
+      <span
+        class="ds-stepper__connector ds-stepper__connector--before"
+        aria-hidden="true"
+      ></span>
+
+      <button
+        *ngIf="clickableSteps; else staticStep"
+        type="button"
+        class="ds-stepper__step"
+        [disabled]="isStepBlocked(step)"
+        [attr.aria-current]="getAriaCurrent(step, index)"
+        [attr.aria-disabled]="isStepBlocked(step)"
+        [attr.aria-label]="getStepAriaLabel(step, index)"
+        [attr.data-stepper-index]="index"
+        (click)="onStepClick(step, index)"
+        (keydown)="onStepKeydown($event, index)"
+      >
+        <ng-container *ngTemplateOutlet="stepContent; context: { step: step, index: index }"></ng-container>
+      </button>
+
+      <ng-template #staticStep>
+        <div
+          class="ds-stepper__step"
+          [attr.aria-current]="getAriaCurrent(step, index)"
+        >
+          <ng-container *ngTemplateOutlet="stepContent; context: { step: step, index: index }"></ng-container>
+        </div>
+      </ng-template>
+
+      <span
+        class="ds-stepper__connector ds-stepper__connector--after"
+        aria-hidden="true"
+      ></span>
+    </li>
+  </ol>
+
+  <div *ngIf="showPreviewControls" class="ds-stepper__controls">
+    <app-button
+      [label]="''"
+      [variant]="DsButtonVariant.Subtle"
+      [size]="DsButtonSize.Small"
+      leftIcon="arrow_back"
+      [ariaLabel]="backLabel"
+      [disabled]="!canGoBack"
+      (clicked)="goBack()"
+    ></app-button>
+
+    <app-button
+      [label]="''"
+      [variant]="DsButtonVariant.Subtle"
+      [size]="DsButtonSize.Small"
+      leftIcon="arrow_forward"
+      [ariaLabel]="nextLabel"
+      [disabled]="!canGoNext"
+      (clicked)="goNext()"
+    ></app-button>
+  </div>
+</div>
+
+<ng-template #stepContent let-step="step" let-index="index">
+  <span class="ds-stepper__indicator" aria-hidden="true">
+    <span
+      class="ds-stepper__icon material-symbols-rounded"
+      [style.font-variation-settings]="getIconFontVariation(step, index)">
+      {{ getIndicatorIcon(step, index) }}
+    </span>
+
+    <ng-container *ngIf="shouldShowStepNumber(step, index)">
+      <span class="ds-stepper__number">{{ getStepNumber(step, index) }}</span>
+    </ng-container>
+  </span>
+
+  <span class="ds-stepper__label">
+    <span>{{step.label}}</span><small *ngIf="step.description" class="ds-stepper__description">{{step.description}}</small>
+  </span>
+</ng-template>

@@ -1,0 +1,163 @@
+/* Figma PO Signature 13557:197793: 398px card, 24px gutters, 300px pad. */
+.signature-backdrop ds-modal-dialog.portal-dialog {
+  display: contents;
+}
+.signature-backdrop .ds-modal-dialog.fund-signature-panel {
+  width: 398px;
+  max-width: 100%;
+  max-height: calc(100dvh - 48px);
+  border-radius: 16px;
+}
+.signature-backdrop .fund-signature-panel .ds-modal-dialog__content {
+  padding: 28px 24px 0;
+  gap: 24px;
+  align-items: stretch;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.fund-signature-heading {
+  position: static;
+  flex-shrink: 0;
+  text-align: center;
+  background: var(--surface-default);
+}
+.fund-signature-heading h2 {
+  color: #263234;
+  font-family: var(--typography-font-family-heading);
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: -0.52px;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+.fund-signature-heading p {
+  color: #000;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+.fund-signature-area {
+  position: relative;
+  border: 2px solid #9b9b9b;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.fund-signature-area > span {
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  right: 8px;
+  text-align: center;
+  font-size: 14px;
+  line-height: normal;
+  color: #9b9b9b;
+  pointer-events: none;
+}
+.fund-signature-area canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 7/6;
+  touch-action: none;
+  cursor: crosshair;
+}
+.fund-signature-area:focus-within {
+  outline: 2px solid var(--focus-default);
+  outline-offset: 2px;
+}
+.fund-signature-redo {
+  align-self: flex-start;
+  --button-height-sm: 20px;
+}
+.fund-signature-redo .ds-button {
+  padding: 0;
+}
+.fund-signature-redo .ds-button__label {
+  gap: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+}
+.fund-signature-redo img,
+.fund-signature-locations .ds-text-field__icon-asset {
+  display: block;
+  flex-shrink: 0;
+}
+.fund-signature-locations {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  align-self: stretch;
+}
+.fund-signature-locations ds-dropdown-menu,
+.fund-signature-locations .ds-dropdown-menu {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.fund-signature-locations .ds-text-field__label-heading {
+  height: 14px;
+}
+.fund-signature-locations .ds-text-field__label-text {
+  font-size: 12px;
+  line-height: 14px;
+  color: #7b7b7b;
+}
+.fund-signature-locations .ds-text-field__control {
+  padding: 12px 16px;
+  border-color: #9b9b9b;
+  min-height: 43px;
+  height: 43px;
+}
+.fund-signature-locations .ds-text-field__input {
+  font-size: 14px;
+  line-height: normal;
+}
+
+.signature-backdrop .fund-signature-panel .ds-modal-dialog__actions {
+  padding: 24px 24px 28px;
+}
+.fund-signature-actions {
+  width: 100% !important;
+  justify-content: space-between !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+.fund-signature-actions .ds-button {
+  --button-padding-x-md: 24px;
+  --button-padding-y-md: 12px;
+  height: 43px;
+  font-size: 14px;
+  line-height: 17px;
+}
+.fund-signature-next .ds-button:disabled:not([aria-busy="true"]) {
+  background: #dedede;
+  color: #9b9b9b;
+  border-color: transparent;
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .signature-backdrop .ds-modal-dialog.fund-signature-panel {
+    max-height: calc(100dvh - 24px);
+  }
+  .signature-backdrop .fund-signature-panel .ds-modal-dialog__content {
+    padding: 28px 24px 0;
+  }
+  .fund-signature-actions ds-button,
+  .fund-signature-actions .ds-button {
+    width: auto;
+  }
+}
+.fund-signature-next {
+  --button-disabled-opacity: 100%;
+}
+.signature-backdrop .fund-signature-actions .ds-button__label,
+.signature-backdrop .fund-signature-redo .ds-button__label {
+  padding-inline: 0;
+}
+
+.fund-signature-locations .ds-dropdown-menu__panel[popover] {
+  border: 0;
+  color: var(--text-neutral-primary);
+}

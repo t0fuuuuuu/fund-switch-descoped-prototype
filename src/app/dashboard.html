@@ -1,0 +1,249 @@
+<section class="portal-layout" aria-labelledby="dashboard-title">
+  <aside class="portal-sidebar">
+    <section class="portal-profile-card">
+      <span class="portal-avatar" aria-hidden="true">E</span>
+      <h2>Welcome Elizabeth!</h2>
+      <p>
+        <span class="material-symbols-rounded" aria-hidden="true">call</span>
+        +63 917 132 3456
+      </p>
+      <p>
+        <span class="material-symbols-rounded" aria-hidden="true">mail</span>
+        elizabethdelacruz&#64;domain.com
+      </p>
+    </section>
+    <section class="portal-toolkit" aria-labelledby="portal-toolkit-title">
+      <h2 id="portal-toolkit-title">Toolkit</h2>
+      <button type="button" data-action="toolkit-info">
+        Policy Change and Payment Forms<span
+          class="material-symbols-rounded"
+          aria-hidden="true"
+          >arrow_forward</span
+        ></button
+      ><button type="button" data-action="toolkit-info">
+        Policy Fund Value Management<span
+          class="material-symbols-rounded"
+          aria-hidden="true"
+          >arrow_forward</span
+        ></button
+      ><button type="button" data-action="toolkit-info">
+        Policy Cancellation and Reinstatement<span
+          class="material-symbols-rounded"
+          aria-hidden="true"
+          >arrow_forward</span
+        ></button
+      ><button type="button" data-action="toolkit-info">
+        Policy Claim Forms<span
+          class="material-symbols-rounded"
+          aria-hidden="true"
+          >arrow_forward</span
+        >
+      </button>
+    </section>
+    <section class="portal-care-card" aria-labelledby="portal-care-title">
+      <h2 id="portal-care-title">Customer Care</h2>
+      <p>Need help? Feel free to contact us:</p>
+      <span
+        ><span class="material-symbols-rounded" aria-hidden="true"
+          >language</span
+        >
+        EastWest Ageas Insurance</span
+      >
+      <span
+        ><span class="material-symbols-rounded" aria-hidden="true">call</span>
+        (+632) 8939-3924</span
+      >
+      <span
+        ><span class="material-symbols-rounded" aria-hidden="true">mail</span>
+        AskMe&#64;ewageas.com.ph</span
+      >
+    </section>
+  </aside>
+  <div class="portal-content dashboard-content">
+    <section class="financial-journey-banner" aria-label="Welcome message">
+      <img
+        src="assets/dashboard-financial-journey-banner.svg"
+        alt=""
+        aria-hidden="true"
+      />
+      <p>
+        We’re glad you chose EastWest Ageas Insurance<br />to be your partner on
+        your financial journey.
+      </p>
+    </section>
+
+    @if (m.state.requestStatus === "Completed") {
+    <ds-section-message
+      class="completed-request-message"
+      appearance="success"
+      size="large"
+      [fullWidth]="true"
+      title="Your fund switch is complete"
+      [description]="'Fund Switch · ' + m.state.requestNumber + '. For Elizabeth’s Policy. View the completion details in Policy Details.'"
+      [isDismissible]="false"
+      [showAction1]="true"
+      [showAction2]="false"
+      label1="View Policy Details"
+      (action1Clicked)="viewPolicyDetails.emit()"
+    ></ds-section-message>
+    }
+    <section class="add-policy-card">
+      <h1 id="dashboard-title">
+        Policy not showing? Add your policy easily here
+      </h1>
+      <ds-button
+        class="add-policy-button"
+        type="button"
+        data-action="toolkit-info"
+        variant="secondary"
+        emphasis="default"
+        size="medium"
+        [useProjectedContent]="true"
+        label=""
+      >
+        <span class="material-symbols-rounded" aria-hidden="true">add</span> Add
+        Policy
+      </ds-button>
+    </section>
+    <div class="dashboard-policy-list">
+      <article class="dashboard-policy-card">
+        <header>
+          <div>
+            <h2>
+              Elizabeth’s Policy
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >edit</span
+              >
+            </h2>
+            <p>FUTURE ASSURE #810000085627</p>
+          </div>
+          <ds-tag variant="warning" label="Inforce"></ds-tag>
+        </header>
+        <div class="dashboard-policy-details">
+          <span
+            ><small>Insured</small
+            ><strong>Elizabeth Garcia Dela Cruz</strong></span
+          ><span
+            ><small
+              >Total Sum Insured
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              ></small
+            ><strong>PHP 1,125,000.00</strong></span
+          ><span
+            ><small
+              >Due Date
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              ></small
+            ><strong>December 14, 2032</strong></span
+          ><span class="policy-downloads"
+            ><button type="button" data-action="toolkit-info">
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >download</span
+              >
+              Policy Pack</button
+            ><button type="button" data-action="toolkit-info">
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >download</span
+              >
+              Fund Transaction Notice
+            </button></span
+          >
+        </div>
+      </article>
+      <article class="dashboard-policy-card">
+        <header>
+          <div>
+            <h2>
+              Elizabeth’s Policy
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >edit</span
+              >
+            </h2>
+            <p>DREAM BUILDER #810000089312</p>
+          </div>
+          <ds-tag variant="danger" label="Lapsed"></ds-tag>
+        </header>
+        <div class="dashboard-policy-details">
+          <span
+            ><small>Insured</small
+            ><strong>Elizabeth Garcia Dela Cruz</strong></span
+          ><span
+            ><small
+              >Total Sum Insured
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              ></small
+            ><strong>PHP 1,125,000.00</strong></span
+          ><span
+            ><small
+              >Due Date
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              ></small
+            ><strong>December 14, 2032</strong></span
+          ><span class="policy-downloads"
+            ><button type="button" data-action="toolkit-info">
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >download</span
+              >
+              Policy Pack</button
+            ><button type="button" data-action="toolkit-info">
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >download</span
+              >
+              Fund Transaction Notice
+            </button></span
+          >
+        </div>
+      </article>
+      <article class="dashboard-policy-card">
+        <header>
+          <div>
+            <h2>
+              Elizabeth’s Policy
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >edit</span
+              >
+            </h2>
+            <p>FUTURE ASSURE MAX #810000088405</p>
+          </div>
+          <ds-tag variant="danger" label="Lapsed"></ds-tag>
+        </header>
+        <div class="dashboard-policy-details">
+          <span
+            ><small>Insured</small
+            ><strong>Elizabeth Garcia Dela Cruz</strong></span
+          ><span
+            ><small
+              >Total Sum Insured
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              ></small
+            ><strong>PHP 1,125,000.00</strong></span
+          ><span
+            ><small
+              >Due Date
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >help</span
+              ></small
+            ><strong>December 14, 2032</strong></span
+          ><span class="policy-downloads"
+            ><button type="button" data-action="toolkit-info">
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >download</span
+              >
+              Policy Pack</button
+            ><button type="button" data-action="toolkit-info">
+              <span class="material-symbols-rounded" aria-hidden="true"
+                >download</span
+              >
+              Fund Transaction Notice
+            </button></span
+          >
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,110 @@
+<div class="modal-backdrop signature-backdrop">
+  <ds-modal-dialog
+    class="portal-dialog"
+    panelClass="fund-signature-panel"
+    size="medium"
+    alignment="right"
+    [isDismissible]="false"
+    [ariaModal]="true"
+    ariaLabelledby="signature-modal-title"
+    ariaDescribedby="signature-modal-description"
+  >
+    <header class="fund-signature-heading">
+      <h2 id="signature-modal-title">Policy Owner’s Signature</h2>
+      <p id="signature-modal-description">
+        This signature will appear on the reviewed documents
+      </p>
+    </header>
+    <div class="fund-signature-area">
+      <span aria-hidden="true">Place your signature here</span
+      ><canvas
+        #pad
+        id="signature-pad"
+        width="700"
+        height="600"
+        tabindex="0"
+        aria-label="Draw your signature"
+        aria-describedby="signature-pad-help"
+        [attr.aria-disabled]="m.state.submitting"
+        (pointerdown)="begin($event)"
+        (pointermove)="move($event)"
+        (pointerup)="finish($event)"
+        (pointercancel)="finish($event)"
+        (lostpointercapture)="finish($event)"
+      ></canvas>
+    </div>
+    <p id="signature-pad-help" class="visually-hidden">
+      Draw using your mouse, finger, or stylus.
+    </p>
+    <ds-button
+      class="fund-signature-redo"
+      label=""
+      [useProjectedContent]="true"
+      variant="secondary"
+      emphasis="transparent"
+      size="small"
+      [disabled]="m.state.submitting"
+      (clicked)="redo()"
+      >Redo Signature
+      <img
+        src="assets/figma-annotations/signature-undo.svg"
+        alt=""
+        aria-hidden="true"
+    /></ds-button>
+    <div class="fund-signature-locations">
+      <ds-dropdown-menu
+        inputId="signature-country"
+        trailingIconAsset="assets/figma-annotations/signature-country-chevron.svg"
+        label="Country of Signature"
+        placeholder="Select Country of signature"
+        [fluid]="true"
+        [adaptiveOverlay]="true"
+        [options]="countries"
+        [selected]="signature.country ? [signature.country] : []"
+        [disabled]="m.state.submitting"
+        (selectionChange)="location('country', $event)"
+      ></ds-dropdown-menu>
+      <ds-dropdown-menu
+        inputId="signature-city"
+        trailingIconAsset="assets/figma-annotations/signature-location-chevron.svg"
+        label="City of Signature"
+        placeholder="Select City of signature"
+        [fluid]="true"
+        [adaptiveOverlay]="true"
+        [options]="cities"
+        [selected]="signature.city ? [signature.city] : []"
+        [disabled]="m.state.submitting"
+        (selectionChange)="location('city', $event)"
+      ></ds-dropdown-menu>
+      <ds-dropdown-menu
+        inputId="signature-district"
+        trailingIconAsset="assets/figma-annotations/signature-location-chevron.svg"
+        label="District / Municipality"
+        placeholder="Select District / Municipality"
+        [fluid]="true"
+        [adaptiveOverlay]="true"
+        [options]="districts"
+        [selected]="signature.district ? [signature.district] : []"
+        [disabled]="m.state.submitting"
+        (selectionChange)="location('district', $event)"
+      ></ds-dropdown-menu>
+    </div>
+    <footer dsModalDialogActions class="fund-signature-actions">
+      <ds-button
+        label="Cancel"
+        variant="primary"
+        emphasis="outline"
+        [disabled]="m.state.submitting"
+        (clicked)="cancelled.emit()"
+      ></ds-button>
+      <ds-button
+        class="fund-signature-next"
+        [label]="m.state.submitting ? 'Processing…' : 'Next'"
+        [ariaLabel]="m.state.submitting ? 'Submitting your request' : 'Next'"
+        [loading]="m.state.submitting"
+        [disabled]="drawing || (!canSubmit && !m.state.submitting)"
+        (clicked)="confirm()"
+      />
+    </footer>
+  </ds-modal-dialog>
+</div>

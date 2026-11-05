@@ -1,0 +1,103 @@
+<div
+  class="ds-dropdown-menu"
+  [class.ds-dropdown-menu--open]="open"
+  [class.ds-dropdown-menu--compact]="compact"
+  [class.ds-dropdown-menu--bottom-end]="placement === 'bottom-end'"
+  [style.width.px]="fluid ? null : width">
+  <ds-text-field
+    #triggerField
+    [inputId]="inputId"
+    [trailingIconAsset]="trailingIconAsset"
+    [fluid]="fluid"
+    [label]="label"
+    [placeholder]="triggerPlaceholder"
+    [value]="triggerValue"
+    [width]="width"
+    [compact]="compact"
+    [disabled]="disabled"
+    [selectTrigger]="true"
+    [editableTrigger]="searchable"
+    [type]="'text'"
+    [projectedValue]="mode === 'checkbox' && selectedOptions.length > 0"
+    [projectedValueEditable]="searchable"
+    [popupOpen]="open"
+    [popupId]="menuId"
+    [popupType]="mode === 'item' ? 'listbox' : 'dialog'"
+    trailingIcon="keyboard_arrow_down"
+    (click)="onTriggerClick($event)"
+    (focusin)="onTriggerFocus()"
+    (focusout)="onTriggerBlur()"
+    (keydown)="onTriggerKeydown($event)"
+    (valueChange)="onSearchQueryChange($event)">
+    <span dsTextFieldValue class="ds-dropdown-menu__tags" *ngIf="mode === 'checkbox' && selectedOptions.length > 0">
+      <ds-tag [label]="selectedOptions.length + ' selected'"></ds-tag>
+    </span>
+  </ds-text-field>
+
+  <div
+    *ngIf="open && !disabled"
+    #menuPanel
+    class="ds-dropdown-menu__panel"
+    [attr.id]="menuId"
+    [attr.role]="mode === 'item' ? 'listbox' : 'dialog'"
+    [attr.aria-label]="label"
+    (keydown)="onMenuKeydown($event)">
+    <ng-container *ngIf="mode === 'item'">
+      <div
+        *ngFor="let option of filteredOptions; trackBy: trackOption"
+        class="ds-dropdown-menu__item"
+        [class.ds-dropdown-menu__item--selected]="isSelected(option.value)"
+        [class.ds-dropdown-menu__item--disabled]="option.disabled"
+        [class.ds-dropdown-menu__item--with-description]="option.description"
+        [attr.role]="'option'"
+        [attr.aria-selected]="isSelected(option.value)"
+        [attr.aria-disabled]="option.disabled ? 'true' : null"
+        [attr.tabindex]="option.disabled ? -1 : 0"
+        (click)="selectOption(option)"
+        (keydown.enter)="$event.preventDefault();selectOption(option)"
+        (keydown.space)="$event.preventDefault(); selectOption(option)">
+        <span class="ds-dropdown-menu__item-label">{{ option.label }}</span>
+        <span *ngIf="option.description" class="ds-dropdown-menu__item-description">{{ option.description }}</span>
+      </div>
+    </ng-container>
+
+    <div *ngIf="mode === 'checkbox'" role="group" [attr.aria-label]="label">
+      <div
+        *ngFor="let option of filteredOptions; trackBy: trackOption"
+        class="ds-dropdown-menu__item ds-dropdown-menu__item--choice"
+        [class.ds-dropdown-menu__item--selected]="isSelected(option.value)"
+        [class.ds-dropdown-menu__item--disabled]="option.disabled"
+        (click)="toggleCheckboxOption(option, $event)">
+        <ds-checkbox
+          [label]="option.label"
+          [name]="menuId + '-checkboxes'"
+          [value]="option.value"
+          [checked]="isSelected(option.value)"
+          [disabled]="!!option.disabled"
+          (selectionChange)="toggleCheckbox($event.value, $event.checked)">
+        </ds-checkbox>
+        <span *ngIf="option.description" class="ds-dropdown-menu__item-description ds-dropdown-menu__item-description--choice">{{ option.description }}</span>
+      </div>
+    </div>
+
+    <fieldset *ngIf="mode === 'radio'" class="ds-dropdown-menu__fieldset">
+      <legend class="ds-dropdown-menu__sr-only">{{ label }}</legend>
+      <div
+        *ngFor="let option of filteredOptions; trackBy: trackOption"
+        class="ds-dropdown-menu__item ds-dropdown-menu__item--choice"
+        [class.ds-dropdown-menu__item--selected]="isSelected(option.value)"
+        [class.ds-dropdown-menu__item--disabled]="option.disabled"
+        (click)="selectRadioOption(option, $event)">
+        <ds-radio
+          [label]="option.label"
+          [name]="menuId + '-radios'"
+          [value]="option.value"
+          [checked]="isSelected(option.value)"
+          [disabled]="!!option.disabled"
+          (selectionChange)="selectRadio($event.value)">
+        </ds-radio>
+        <span *ngIf="option.description" class="ds-dropdown-menu__item-description ds-dropdown-menu__item-description--choice">{{ option.description }}</span>
+      </div>
+    </fieldset>
+  </div>
+</div>

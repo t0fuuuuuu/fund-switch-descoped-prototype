@@ -1,0 +1,11 @@
+<div
+  class="ds-progress-bar"
+  [ngClass]="progressBarClasses"
+  role="progressbar"
+  [attr.aria-label]="ariaLabel"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  [attr.aria-valuenow]="progress"
+  [attr.aria-valuetext]="ariaValueText || null">
+  <span class="ds-progress-bar__fill" [style.width.%]="progress"></span>
+</div>

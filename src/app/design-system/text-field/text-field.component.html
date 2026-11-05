@@ -1,0 +1,76 @@
+<div
+  class="ds-text-field"
+  [class.ds-text-field--compact]="compact"
+  [class.ds-text-field--disabled]="disabled"
+  [class.ds-text-field--read-only]="readOnly"
+  [class.ds-text-field--select-trigger]="selectTrigger"
+  [class.ds-text-field--editable-trigger]="selectTrigger && editableTrigger"
+  [class.ds-text-field--select-placeholder]="selectTrigger && !value"
+  [class.ds-text-field--projected-value]="projectedValue"
+  [class.ds-text-field--projected-value-editable]="projectedValue && projectedValueEditable"
+  [class.ds-text-field--invalid]="invalid"
+  [class.ds-text-field--fluid]="fluid"
+  [style.width.px]="fluid ? null : width">
+  <label class="ds-text-field__label">
+    <span *ngIf="label" class="ds-text-field__label-heading">
+      <span class="ds-text-field__label-text">{{ label }}</span>
+      <span
+        *ngIf="showLabelIcon && labelIcon"
+        class="ds-text-field__label-icon material-symbols-rounded"
+        [class.ds-text-field__label-icon--filled]="labelIconFill"
+        aria-hidden="true">
+        {{ labelIcon }}
+      </span>
+    </span>
+
+    <span class="ds-text-field__control">
+      <span *ngIf="leadingIcon" class="ds-text-field__icon material-symbols-rounded" aria-hidden="true">
+        {{ leadingIcon }}
+      </span>
+      <span *ngIf="prefixIcon || prefix" class="ds-text-field__prefix">
+        <img *ngIf="prefixIcon" class="ds-text-field__prefix-icon" [src]="prefixIcon" alt="" aria-hidden="true" />
+        <span *ngIf="prefix" class="ds-text-field__adornment">{{ prefix }}</span>
+      </span>
+      <span *ngIf="projectedValue" class="ds-text-field__projected-value" aria-hidden="true">
+        <ng-content select="[dsTextFieldValue]"></ng-content>
+      </span>
+      <input
+        class="ds-text-field__input"
+        [attr.autocomplete]="autocomplete || null"
+        (blur)="onTouched()"
+        [attr.id]="inputId || null"
+        [attr.name]="name || null"
+        [attr.type]="selectTrigger && !editableTrigger ? 'button' : type"
+        [value]="selectTrigger ? (value || placeholder) : value"
+        [attr.placeholder]="placeholder || null"
+        [attr.aria-label]="label ? null : (ariaLabel || placeholder || null)"
+        [attr.aria-describedby]="describedBy"
+        [attr.aria-invalid]="invalid ? 'true' : null"
+        [attr.role]="selectTrigger ? 'combobox' : null"
+        [attr.aria-expanded]="selectTrigger ? popupOpen : null"
+        [attr.aria-controls]="selectTrigger ? popupId : null"
+        [attr.aria-haspopup]="selectTrigger ? popupType : null"
+        [attr.aria-autocomplete]="selectTrigger ? (editableTrigger ? 'list' : 'none') : null"
+        [disabled]="disabled"
+        [readOnly]="readOnly || (selectTrigger && !editableTrigger)"
+        (input)="handleInput($event)" />
+      <span *ngIf="suffix" class="ds-text-field__adornment">{{ suffix }}</span>
+      <button *ngIf="trailingIcon && trailingActionLabel" class="ds-text-field__trailing-action" type="button" [attr.aria-label]="trailingActionLabel" (click)="$event.preventDefault();trailingAction.emit()"><span class="ds-text-field__icon material-symbols-rounded" aria-hidden="true">{{trailingIcon}}</span></button>
+      <span *ngIf="trailingIcon && !trailingActionLabel && !trailingIconAsset" class="ds-text-field__icon ds-text-field__icon--trailing material-symbols-rounded" aria-hidden="true">{{trailingIcon}}</span>
+      <img *ngIf="trailingIconAsset" [src]="trailingIconAsset" alt="" aria-hidden="true" class="ds-text-field__icon-asset"/>
+    </span>
+  </label>
+
+  <span
+    *ngIf="helperText"
+    class="ds-text-field__supporting-text"
+    [attr.id]="inputId ? inputId + '-helper' : null">
+    {{ helperText }}
+  </span>
+  <span
+    *ngIf="invalid && errorText"
+    class="ds-text-field__supporting-text ds-text-field__supporting-text--error"
+    [attr.id]="inputId ? inputId + '-error' : null">
+    {{ errorText }}
+  </span>
+</div>

@@ -1,0 +1,124 @@
+:host {
+  --modal-dialog-bg: var(--surface-default);
+  --modal-dialog-radius: var(--radius-lg);
+  --modal-dialog-padding-x: var(--space-3xl);
+  --modal-dialog-content-padding-top: var(--space-3xl);
+  --modal-dialog-content-padding-bottom: 0;
+  --modal-dialog-actions-padding-top: var(--space-3xl);
+  --modal-dialog-actions-padding-bottom: var(--space-3xl);
+  --modal-dialog-content-gap: var(--space-md);
+  --modal-dialog-actions-gap: var(--space-lg);
+  --modal-dialog-dismiss-size: 32px;
+
+  display: block;
+  max-width: 100%;
+  width: 100%;
+}
+
+.ds-modal-dialog {
+  align-items: flex-start;
+  background: var(--modal-dialog-bg);
+  border-radius: var(--modal-dialog-radius);
+  box-sizing: border-box;
+  color: var(--text-neutral-primary);
+  display: flex;
+  flex-direction: column;
+  max-width: min(100%, 1440px);
+  min-width: 272px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.ds-modal-dialog__content {
+  align-items: flex-start;
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--modal-dialog-content-gap);
+  justify-content: flex-start;
+  min-height: 116px;
+  padding:
+    var(--modal-dialog-content-padding-top)
+    var(--modal-dialog-padding-x)
+    var(--modal-dialog-content-padding-bottom);
+  width: 100%;
+}
+
+.ds-modal-dialog__actions {
+  align-items: stretch;
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: var(--modal-dialog-actions-gap);
+  justify-content: center;
+  padding:
+    var(--modal-dialog-actions-padding-top)
+    var(--modal-dialog-padding-x)
+    var(--modal-dialog-actions-padding-bottom);
+  width: 100%;
+}
+
+.ds-modal-dialog__dismiss {
+  --button-subtle-filled-bg-default: transparent;
+
+  height: var(--modal-dialog-dismiss-size);
+  justify-content: center;
+  position: absolute;
+  right: var(--modal-dialog-padding-x);
+  top: var(--space-2xl);
+  width: var(--modal-dialog-dismiss-size);
+}
+
+.ds-modal-dialog--full-screen {
+  border-radius: 0;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  min-height: 0;
+}
+
+.ds-modal-dialog--full-screen .ds-modal-dialog__content {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.ds-modal-dialog--full-screen .ds-modal-dialog__actions {
+  background: var(--modal-dialog-bg);
+  border-top: var(--modal-dialog-actions-divider, none);
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
+.ds-modal-dialog--large {
+  max-width: min(100%, 700px);
+}
+
+.ds-modal-dialog--medium {
+  max-width: min(100%, 528px);
+}
+
+.ds-modal-dialog--small {
+  max-width: min(100%, 272px);
+}
+
+.ds-modal-dialog--small .ds-modal-dialog__content {
+  text-align: center;
+}
+
+.ds-modal-dialog--center .ds-modal-dialog__actions {
+  align-items: center;
+}
+
+.ds-modal-dialog--right .ds-modal-dialog__actions {
+  align-items: flex-end;
+}
+
+.ds-modal-dialog--full-screen {
+  --modal-dialog-dismiss-size: 40px;
+}

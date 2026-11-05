@@ -1,0 +1,43 @@
+{
+  "name": "fund-switch-angular",
+  "version": "1.0.0",
+  "description": "Angular Fund Switch stakeholder prototype",
+  "scripts": {
+    "start": "ng serve --host 127.0.0.1 --port 4200",
+    "build": "ng build",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "test:flows": "node tests/flows.cjs",
+    "format": "prettier --write \"src/**/*.{ts,html,css}\" tests/*.cjs",
+    "test:reference": "node tests/reference.cjs",
+    "test:design-system": "node tests/design-system.cjs",
+    "test:signature": "node tests/signature.cjs",
+    "test:annotations": "node tests/annotations.cjs",
+    "build:preview": "ng build --base-href /fund-switch-descoped-prototype/fund-switch/ && node scripts/prepare-preview.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/common": "^21.2.26",
+    "@angular/compiler": "^21.2.26",
+    "@angular/core": "^21.2.26",
+    "@angular/forms": "^21.2.26",
+    "@angular/platform-browser": "^21.2.26",
+    "@angular/router": "^21.2.26",
+    "rxjs": "^7.8.2",
+    "tslib": "^2.9.1",
+    "zone.js": "^0.16.3"
+  },
+  "private": true,
+  "devDependencies": {
+    "@angular/build": "^21.2.29",
+    "@angular/cli": "^21.2.29",
+    "@angular/compiler-cli": "^21.2.26",
+    "playwright": "^1.64.1",
+    "prettier": "^3.9.10",
+    "typescript": "~5.9"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || ^24.0.0"
+  }
+}

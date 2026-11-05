@@ -1,0 +1,1198 @@
+<header class="main-nav" [inert]="!!modal || mobileOpen">
+  <button
+    class="brand"
+    type="button"
+    (click)="
+      go(s.loggedIn ? 'dashboard' : 'login', s.loggedIn ? 'Dashboard' : '')
+    "
+    aria-label="EastWest Ageas home"
+  >
+    <img
+      [src]="
+        s.screen === 'success'
+          ? 'assets/figma-annotations/nav-logo.svg'
+          : 'assets/figma-main-nav-logo.svg'
+      "
+      alt="eastwest ageas insurance"
+    />
+  </button>
+  <nav class="public-nav-links" aria-label="Public navigation">
+    @for (
+      n of [
+        "Solutions",
+        "Investment",
+        "About Us",
+        "News",
+        "Careers",
+        "Support",
+        "Pay Now",
+      ];
+      track n
+    ) {
+      <button (click)="notify(n + ' is outside this prototype.')">
+        {{ n }}
+      </button>
+    }
+  </nav>
+  <button class="public-login-pill" (click)="focusLogin()">
+    <span uiIcon name="person"></span> Log In
+  </button>
+  <nav class="account-nav-links" aria-label="Account navigation">
+    @for (n of navs; track n) {
+      <button
+        (click)="navigate(n)"
+        [class.active]="s.activeNav === n"
+        [attr.aria-current]="s.activeNav === n ? 'page' : null"
+      >
+        {{ n }}
+      </button>
+    }
+  </nav>
+  <button
+    class="profile"
+    (click)="notify('Profile is outside this prototype.')"
+    aria-label="Open Elizabeth G.'s profile"
+  >
+    <img src="assets/figma-main-nav-user.svg" alt="" /><span>Elizabeth G.</span>
+  </button>
+  <button
+    id="mobile-menu"
+    class="mobile-menu"
+    (click)="openMobile()"
+    [attr.aria-expanded]="mobileOpen"
+    aria-controls="mobile-navigation"
+  >
+    Menu <img src="assets/figma-mobile-menu-icon.svg" alt="" />
+  </button>
+</header>
+@if (mobileOpen) {
+  <div
+    class="mobile-nav-backdrop"
+    id="mobile-navigation"
+    (click)="closeMobile()"
+  >
+    <section
+      class="mobile-nav-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mobile-nav-title"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 class="visually-hidden" id="mobile-nav-title">Account navigation</h2>
+      <header class="mobile-nav-header">
+        <img
+          class="mobile-nav-logo"
+          src="assets/figma-mobile-menu-logo.svg"
+          alt="eastwest ageas insurance"
+        /><button class="mobile-nav-close" (click)="closeMobile()">
+          Close <img src="assets/figma-mobile-menu-close.svg" alt="" />
+        </button>
+      </header>
+      <div class="mobile-nav-user">
+        <span class="mobile-nav-avatar"
+          ><img src="assets/figma-mobile-menu-avatar.svg" alt="" /><span
+            >E</span
+          ></span
+        ><strong>ELIZABETH G.</strong>
+      </div>
+      <nav class="mobile-nav-list" aria-label="Mobile navigation">
+        <button
+          class="mobile-nav-link mobile-nav-action"
+          (click)="navigate('Profile')"
+        >
+          <span uiIcon name="person"></span><span>My Profile</span>
+        </button>
+        @for (n of navs; track n) {
+          <button
+            class="mobile-nav-link"
+            [class.active]="s.activeNav === n"
+            (click)="navigate(n)"
+          >
+            {{ n }}
+          </button>
+        }
+        <button
+          class="mobile-nav-link mobile-nav-action"
+          (click)="navigate('Log out')"
+        >
+          <span uiIcon name="lock"></span><span>Log out</span>
+        </button>
+      </nav>
+    </section>
+  </div>
+}
+<main id="app" tabindex="-1" [inert]="!!modal || mobileOpen">
+  @switch (s.screen) {
+    @case ("login") {
+      <section class="login-page" aria-labelledby="login-title">
+        <div
+          class="login-hero"
+          aria-label="A happy couple enjoying time together"
+        >
+          <span class="login-ring ring-one"></span
+          ><span class="login-ring ring-two"></span>
+        </div>
+        <div class="login-panel">
+          <form
+            class="login-form"
+            [formGroup]="login"
+            (ngSubmit)="loginSubmit()"
+          >
+            <h1 id="login-title">Welcome to EWAOnline</h1>
+            <p class="login-intro">
+              <span uiIcon name="info"></span
+              ><span
+                >No account yet? Click Sign Up to create an account. To view
+                your policy, please login below.</span
+              >
+            </p>
+            <ds-text-field
+              label="Username"
+              inputId="login-username"
+              formControlName="username"
+              autocomplete="username"
+              placeholder="Enter your username"
+              [fluid]="true"
+              [invalid]="!!s.loginError && login.controls.username.invalid"
+            ></ds-text-field>
+            <ds-text-field
+              label="Password"
+              inputId="login-password"
+              formControlName="password"
+              [type]="s.passwordVisible ? 'text' : 'password'"
+              autocomplete="current-password"
+              placeholder="Enter your password"
+              [fluid]="true"
+              [invalid]="!!s.loginError && login.controls.password.invalid"
+              [trailingIcon]="
+                s.passwordVisible ? 'visibility' : 'visibility_off'
+              "
+              [trailingActionLabel]="
+                s.passwordVisible ? 'Hide password' : 'Show password'
+              "
+              (trailingAction)="s.passwordVisible = !s.passwordVisible"
+            ></ds-text-field>
+            @if (s.loginError) {
+              <p class="login-error" role="alert">
+                <span uiIcon name="error"></span>{{ s.loginError }}
+              </p>
+            }
+            <ds-button
+              class="ewa-login-continue"
+              type="submit"
+              variant="primary"
+              emphasis="default"
+              size="medium"
+              [useProjectedContent]="true"
+              label=""
+              >Continue</ds-button
+            >
+            <p class="login-links">
+              Don’t have an account?
+              <button type="button" data-action="public-info">Sign up</button>
+            </p>
+            <p class="login-links">
+              <button type="button" data-action="public-info">
+                Forgot password</button
+              ><span>|</span
+              ><button type="button" data-action="public-info">
+                Forgot username
+              </button>
+            </p>
+            <div class="login-support">
+              <p>Having trouble logging in?</p>
+              <span
+                ><span uiIcon name="mail"></span> AskMe&#64;ewageas.com.ph</span
+              ><span><span uiIcon name="call"></span> +63 2 8939 3924</span>
+            </div>
+            <footer>
+              <p>
+                Copyright © 2026. East West Ageas Life Insurance Corporation.
+              </p>
+              <p>Legal <span>·</span> Privacy <span>·</span> Security</p>
+            </footer>
+          </form>
+        </div>
+      </section>
+    }
+    @case ("dashboard") {
+      @if (s.dashboardLoading) {
+        <portal-dashboard-loading />
+      } @else {
+        <portal-dashboard
+          (viewPolicyDetails)="go('policy-details', 'Policy Details')"
+        />
+      }
+    }
+    @case ("policy-details") {
+      <portal-policy-details (viewRequest)="go('requests')" />
+    }
+    @case ("investments") {
+      <portal-investments
+        (switchFund)="
+          s.policyId = $event.policyId;
+          s.sourceId = $event.sourceId;
+          s.targetId = '';
+          s.additionalSourceIds = [];
+          m.resetDocuments();
+          go('funds')
+        "
+        (notice)="notify($event)"
+      />
+    }
+    @case ("services") {
+      <section class="services-panel" aria-labelledby="page-title">
+        <header class="intro">
+          <h1 id="page-title">Manage your policy online</h1>
+          <p>
+            Submit requests, update your details, and track progress in one
+            place.
+          </p>
+        </header>
+        <div class="service-grid">
+          @for (service of services; track service.title) {
+            <article
+              class="service-card"
+              [class.featured]="service.title === 'Fund Switch'"
+              role="button"
+              tabindex="0"
+              (click)="
+                service.title === 'Fund Switch'
+                  ? start()
+                  : notify(service.title + ' is outside this Fund Switch demo.')
+              "
+              (keydown.enter)="
+                service.title === 'Fund Switch'
+                  ? start()
+                  : notify(service.title + ' is outside this Fund Switch demo.')
+              "
+              (keydown.space)="
+                $event.preventDefault();
+                service.title === 'Fund Switch'
+                  ? start()
+                  : notify(service.title + ' is outside this Fund Switch demo.')
+              "
+              [attr.aria-label]="service.title + ': Click to start request'"
+            >
+              <div>
+                <h2>
+                  <span uiIcon [name]="service.icon"></span>{{ service.title }}
+                </h2>
+                <p>{{ service.copy }}</p>
+              </div>
+              <span class="service-card-action" aria-hidden="true"
+                >{{
+                  service.title === "Other Services"
+                    ? "Click here to view more"
+                    : "Click to start request"
+                }}<span uiIcon name="keyboard_arrow_right"></span
+              ></span>
+            </article>
+          }
+        </div>
+        <section class="requests" aria-labelledby="requests-title">
+          <header><h2 id="requests-title">MY REQUESTS</h2></header>
+          @if (s.requestStatus) {
+            <button class="request-policy-row" (click)="go('requests')">
+              <span
+                ><strong>Policy Number</strong
+                ><small>{{ s.requestPolicyId }}</small></span
+              ><span uiIcon name="keyboard_arrow_right"></span>
+            </button>
+          } @else {
+            <p class="empty-state">
+              <span uiIcon name="inventory_2"></span
+              ><span
+                >No requests yet. To submit a request, choose a service above
+                and complete the required steps.</span
+              >
+            </p>
+          }
+        </section>
+      </section>
+    }
+    @case ("requests") {
+      <section
+        class="policy-requests-panel"
+        aria-labelledby="policy-requests-title"
+      >
+        <header class="policy-requests-header">
+          <h1 id="policy-requests-title">
+            Requests for Policy <span>#{{ requestPolicy.id }}</span>
+          </h1>
+          <p>
+            See all service requests linked to this policy. You can check
+            progress, review details, or continue ongoing requests.
+          </p>
+        </header>
+        <div class="policy-requests-body">
+          <div class="request-date">September 3, 2026</div>
+          <article
+            class="request-card"
+            [class.expanded]="s.requestExpanded && s.requestStatus !== 'Draft'"
+          >
+            <button
+              class="request-card-toggle"
+              (click)="
+                s.requestStatus === 'Draft'
+                  ? resumeDraft()
+                  : (s.requestExpanded = !s.requestExpanded)
+              "
+            >
+              <span class="request-card-copy"
+                ><span class="request-card-title"
+                  >Fund Switch Request
+                  <ds-tag
+                    [variant]="$any(statusVariant(s.requestStatus))"
+                    [label]="s.requestStatus"
+                  ></ds-tag></span
+                ><small
+                  >{{ requestPolicy.product }} #{{ requestPolicy.id }}</small
+                ></span
+              ><span
+                uiIcon
+                [name]="
+                  s.requestStatus === 'Draft'
+                    ? 'keyboard_arrow_right'
+                    : s.requestExpanded
+                      ? 'keyboard_arrow_up'
+                      : 'keyboard_arrow_down'
+                "
+              ></span>
+            </button>
+            @if (s.requestExpanded && s.requestStatus !== "Draft") {
+              <div
+                class="request-progress"
+                aria-label="Fund switch request progress"
+              >
+                @for (
+                  label of ["Submitted", "In Progress", "Completed"];
+                  track label;
+                  let i = $index
+                ) {
+                  <div
+                    class="request-progress-step"
+                    [class.complete]="
+                      i === 0 || s.requestStatus === 'Completed'
+                    "
+                    [class.upcoming]="
+                      i !== 0 && s.requestStatus !== 'Completed'
+                    "
+                  >
+                    <span class="request-progress-indicator"
+                      ><span
+                        uiIcon
+                        [name]="
+                          i === 0 || s.requestStatus === 'Completed'
+                            ? 'check_circle'
+                            : 'circle'
+                        "
+                      ></span></span
+                    ><span
+                      ><strong>{{ label }}</strong>
+                      @if (i === 0) {
+                        <small
+                          >Your fund switch request is currently under review.
+                          We’ll notify you if additional information is
+                          required.</small
+                        >
+                      } @else if (s.requestStatus === "Completed") {
+                        <small>{{
+                          i === 1
+                            ? "Your request passed validation and was processed."
+                            : "Your policy allocation has been updated successfully."
+                        }}</small>
+                      }
+                    </span>
+                  </div>
+                }
+              </div>
+            }
+          </article>
+        </div>
+        <footer class="policy-requests-footer">
+          <ds-button
+            (click)="go('services', 'Services')"
+            variant="primary"
+            emphasis="outline"
+            size="medium"
+            [useProjectedContent]="true"
+            label=""
+          >
+            Back
+          </ds-button>
+        </footer>
+      </section>
+    }
+    @case ("success") {
+      <section class="success-card" aria-labelledby="success-title">
+        <div class="success-main">
+          <header class="success-header">
+            <div class="success-heading">
+              <img class="success-animation" [src]="requestSentAsset" alt="" />
+              <h1 id="success-title">Request Received</h1>
+            </div>
+            <p class="success-copy">
+              Your fund switch request has been successfully submitted.<br />Our
+              team will review it and let you know if anything else is needed.
+            </p>
+          </header>
+          <section class="submission-progress" aria-label="Request status">
+            <ds-stepper
+              [steps]="submissionSteps"
+              [clickableSteps]="false"
+            ></ds-stepper>
+          </section>
+          <section
+            class="request-summary"
+            aria-labelledby="request-summary-title"
+          >
+            <h2 id="request-summary-title">Policy Details</h2>
+            <dl class="request-details-grid">
+              <div>
+                <dt>First Name</dt>
+                <dd>Elizabeth</dd>
+              </div>
+              <div>
+                <dt>Middle Name</dt>
+                <dd>Cruz</dd>
+              </div>
+              <div>
+                <dt>Last Name</dt>
+                <dd>Garcia</dd>
+              </div>
+              <div>
+                <dt>Email Address</dt>
+                <dd>elizabethgarcia&#64;gmail.com</dd>
+              </div>
+              <div>
+                <dt>Mobile Number</dt>
+                <dd>+63 905 882 1746</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+        <footer class="success-actions">
+          <ds-button
+            (click)="go('services', 'Services')"
+            variant="primary"
+            emphasis="outline"
+            size="medium"
+            [useProjectedContent]="true"
+            label=""
+          >
+            Back to Services
+          </ds-button>
+        </footer>
+      </section>
+    }
+    @default {
+      <section
+        class="flow-shell"
+        [class.focus-mode]="s.screen === 'documents' || s.screen === 'upload'"
+      >
+        @if (s.screen !== "documents" && s.screen !== "upload") {
+          <aside class="stepper" aria-label="Fund Switch progress">
+            <div class="step-progress">
+              <div class="step-progress-label">
+                <span>Steps Completed</span><span>{{ activeStep - 1 }}/3</span>
+              </div>
+              <ds-progress-bar
+                variant="success"
+                [progress]="((activeStep - 1) / 3) * 100"
+                ariaLabel="Steps completed"
+                [ariaValueText]="activeStep - 1 + ' of 3 steps completed'"
+              ></ds-progress-bar>
+            </div>
+            <div class="stepper-body">
+              <h2>Fund Switch</h2>
+              <ds-stepper
+                [steps]="stepItems"
+                [currentIndex]="activeStep - 1"
+                [clickableSteps]="false"
+              ></ds-stepper>
+            </div>
+          </aside>
+        }
+        <section
+          class="flow-panel"
+          [class.allow-overflow]="s.screen === 'funds'"
+          [class.review-panel]="s.screen === 'review'"
+          aria-labelledby="flow-title"
+        >
+          <header class="flow-header">
+            @if (s.screen === "documents" || s.screen === "upload") {
+              <nav class="flow-breadcrumb" aria-label="Breadcrumb">
+                <span>Fund Switch</span><span aria-hidden="true">/</span
+                ><span>Switch Your Fund</span><span aria-hidden="true">/</span
+                ><strong aria-current="page">Upload Documents</strong>
+              </nav>
+            }
+            <h1 id="flow-title">{{ flowTitle }}</h1>
+            <p>{{ flowDescription }}</p>
+          </header>
+          <div class="flow-body">
+            @if (s.screen === "policy") {
+              <div class="policy-list">
+                @for (policy of visiblePolicies; track policy.id) {
+                  @if (m.hasPendingRequest(policy)) {
+                    <button
+                      class="policy-option pending-policy"
+                      (click)="pending(policy)"
+                      [attr.aria-label]="
+                        policy.owner +
+                        ', ' +
+                        policy.product +
+                        ', policy ' +
+                        policy.id +
+                        '. Fund switch request pending'
+                      "
+                    >
+                      <span class="policy-card"
+                        ><span class="policy-card-head"
+                          ><span class="policy-name">{{ policy.owner }}</span
+                          ><span class="policy-badges"
+                            ><ds-tag
+                              [variant]="$any(statusVariant(policy.status))"
+                              [disabled]="
+                                policy.selectable === false &&
+                                !policy.pendingRequest
+                              "
+                              [label]="policy.status"
+                            ></ds-tag></span></span
+                        ><span class="policy-meta"
+                          >{{ policy.product }} #{{ policy.id }}</span
+                        ></span
+                      >
+                    </button>
+                  } @else {
+                    @if (policy.id === "810000087920") {
+                      <p class="policy-group-title">Other Policies</p>
+                    }
+                    <ds-radio
+                      class="policy-option"
+                      [class.ineligible]="!policy.fundSwitchEligible"
+                      [class.disabled]="!policy.selectable"
+                      label=""
+                      name="policy"
+                      [value]="policy.id"
+                      [checked]="s.policyId === policy.id"
+                      [disabled]="!policy.selectable"
+                      (selectionChange)="choosePolicy(policy.id)"
+                      ><span class="policy-card"
+                        ><span class="policy-card-head"
+                          ><span class="policy-name">{{ policy.owner }}</span
+                          ><span class="policy-badges"
+                            ><ds-tag
+                              [variant]="$any(statusVariant(policy.status))"
+                              [disabled]="
+                                policy.selectable === false &&
+                                !policy.pendingRequest
+                              "
+                              [label]="policy.status"
+                            ></ds-tag></span></span
+                        ><span class="policy-meta"
+                          >{{ policy.product }} #{{ policy.id }}</span
+                        ></span
+                      ></ds-radio
+                    >
+                  }
+                }
+              </div>
+            }
+            @if (s.screen === "funds") {
+              <ui-message
+                title="Fund Switch Requirements"
+                class="fund-requirements-banner"
+                >Move all selected funds to one fund in the same currency. No
+                partial switches or reallocations. Minimum: ₱10,000 or
+                US$500.</ui-message
+              >
+              <details
+                class="investment-policy-card flow-portfolio-card"
+                (toggle)="sizePortfolio()"
+              >
+                <summary class="flow-portfolio-summary">
+                  <span
+                    ><strong>Elizabeth's Policy</strong
+                    ><small
+                      >{{ m.selectedPolicy()?.product }}
+                      <span>#{{ s.policyId }}</span></small
+                    ></span
+                  ><span class="portfolio-toggle"
+                    ><span class="visually-hidden"
+                      >Show or hide fund breakdown</span
+                    ><span uiIcon name="expand_more"></span
+                  ></span>
+                </summary>
+                <div class="policy-overview flow-policy-overview">
+                  <div>
+                    <span>Fund Value <span uiIcon name="help"></span></span
+                    ><strong>{{
+                      m.money(m.policyFunds().reduce(sumValues, 0))
+                    }}</strong>
+                  </div>
+                </div>
+                <div
+                  class="investment-breakdown flow-investment-breakdown"
+                  role="table"
+                  aria-label="Current fund holdings"
+                >
+                  <div class="investment-fund-table-head" role="row">
+                    <span role="columnheader"
+                      >Fund Name <span uiIcon name="help"></span
+                      ><span uiIcon name="north"></span></span
+                    ><span role="columnheader"
+                      >NAVPU <span uiIcon name="help"></span></span
+                    ><span role="columnheader"
+                      >Units <span uiIcon name="help"></span></span
+                    ><span role="columnheader"
+                      >Allocation <span uiIcon name="help"></span></span
+                    ><span role="columnheader"
+                      >Fund Value <span uiIcon name="help"></span
+                    ></span>
+                  </div>
+                  @for (fund of m.policyFunds(); track fund.id) {
+                    <div
+                      class="investment-fund-table-row"
+                      [class]="'investment-fund-table-row ' + fund.accent"
+                      role="row"
+                    >
+                      <span role="cell" class="investment-held-fund">{{
+                        fund.name
+                      }}</span
+                      ><span role="cell" data-label="NAVPU">{{
+                        fund.navpu
+                      }}</span
+                      ><span role="cell" data-label="Units">{{
+                        fund.units
+                      }}</span
+                      ><span role="cell" data-label="Allocation"
+                        >{{ fund.allocation }}%</span
+                      ><span
+                        role="cell"
+                        data-label="Fund Value"
+                        class="investment-fund-value"
+                        ><strong>{{ m.money(fund.value) }}</strong></span
+                      >
+                    </div>
+                  }
+                </div>
+              </details>
+              <div class="switch-grid">
+                @for (kind of ["source", "target"]; track kind) {
+                  @let fund =
+                    kind === "source" ? m.selectedSource() : m.selectedTarget();
+                  @let disabled =
+                    kind === "target" &&
+                    (!s.sourceId || !m.meetsMinimumSwitch());
+                  @if (kind === "target") {
+                    <div class="switch-arrow" aria-hidden="true">
+                      <span class="material-symbols-sharp">arrow_forward</span>
+                    </div>
+                  }
+                  <section class="fund-card" [class.disabled]="disabled">
+                    <div class="fund-step-heading">
+                      <span class="fund-step-number" aria-hidden="true">{{
+                        kind === "source" ? 1 : 2
+                      }}</span
+                      ><span
+                        ><strong>{{
+                          kind === "source"
+                            ? "Choose fund to switch from"
+                            : "Choose destination fund"
+                        }}</strong
+                        ><small>{{
+                          kind === "source"
+                            ? "Select the fund you want to move money from."
+                            : "Select the fund you want to move your money to."
+                        }}</small></span
+                      >
+                    </div>
+                    <div class="fund-card-copy">
+                      <div class="eyebrow">
+                        {{ kind === "source" ? "SWITCH FROM" : "SWITCH TO" }}
+                      </div>
+                      <h2>
+                        {{
+                          fund?.name ||
+                            (kind === "source"
+                              ? "Select a source fund"
+                              : "Select a target fund")
+                        }}
+                      </h2>
+                      @if (fund) {
+                        @if (kind === "source") {
+                          <p>Current allocation: {{ fund.allocation }}%</p>
+                        } @else {
+                          <p class="fund-risk-row">
+                            <ds-tag
+                              [variant]="
+                                fund.riskScore >= 7 ? 'danger' : 'neutral'
+                              "
+                              [label]="fund.risk"
+                              ><span
+                                dsTagSlot
+                                class="fund-risk-slot material-symbols-rounded"
+                                aria-hidden="true"
+                                >{{
+                                  fund.riskScore >= 7 ? "trending_up" : "shield"
+                                }}</span
+                              ></ds-tag
+                            >
+                          </p>
+                        }
+                        <div class="fund-value">{{ m.money(fund.value) }}</div>
+                        <p>Current fund value</p>
+                      } @else {
+                        <p>
+                          {{
+                            kind === "source"
+                              ? "Choose where your current fund will be switched from."
+                              : "Choose where your current fund will be switched."
+                          }}
+                        </p>
+                      }
+                    </div>
+                    <ds-dropdown-menu
+                      class="fund-dropdown"
+                      [inputId]="kind + '-fund'"
+                      [label]="
+                        kind === 'source' ? 'Source fund' : 'Target fund'
+                      "
+                      placeholder="Choose a fund"
+                      [fluid]="true"
+                      [options]="dropdownOptions(kind)"
+                      [selected]="fund ? [fund.id] : []"
+                      [disabled]="disabled"
+                      (selectionChange)="chooseFund(kind, $event[0])"
+                    ></ds-dropdown-menu>
+                    @if (kind === "source" && fund && !m.meetsMinimumSwitch()) {
+                      <div class="fund-card-action">
+                        <div class="field-error" role="alert">
+                          <span uiIcon name="error"></span
+                          ><span
+                            >This fund is below the
+                            {{ m.money(m.minimumSwitchAmount()) }} minimum
+                            switch amount.</span
+                          >
+                        </div>
+                      </div>
+                    }
+                  </section>
+                }
+              </div>
+              @if (m.requiresSupportingDocuments()) {
+                @if (s.fundCheck === "checking") {
+                  <ui-skeleton kind="downloads" />
+                } @else {
+                  <ui-message
+                    tone="warning"
+                    title="Risk Profile Update Required"
+                    class="risk-documents-banner"
+                    >{{ m.selectedTarget()?.name }} ({{
+                      m.selectedTarget()?.risk
+                    }}) is more aggressive than
+                    {{ m.selectedSource()?.name }} ({{
+                      m.selectedSource()?.risk
+                    }}). Download and complete the RPQ and IPS, then upload both
+                    before continuing.</ui-message
+                  >
+                  <section
+                    class="document-downloads"
+                    aria-labelledby="document-downloads-title"
+                  >
+                    <h2 id="document-downloads-title">Download forms</h2>
+                    <p>
+                      Download and complete the RPQ and IPS. You’ll upload both
+                      on the next screen.
+                    </p>
+                    <div class="document-download-list">
+                      @for (doc of documents; track doc.kind) {
+                        <div class="document-download-row">
+                          <span class="document-file-icon"
+                            ><span uiIcon name="picture_as_pdf"></span></span
+                          ><span
+                            ><strong>{{ doc.label }}</strong
+                            ><small>PDF</small></span
+                          ><ds-link
+                            class="document-download-action"
+                            [href]="doc.file"
+                            [download]="true"
+                            [label]="''"
+                            variant="strong-with-icon"
+                            icon="download"
+                            [ariaLabel]="'Download ' + doc.label"
+                            [title]="'Download ' + doc.label"
+                            (click)="downloadPrompt()"
+                          ></ds-link>
+                        </div>
+                      }
+                    </div>
+                  </section>
+                }
+              }
+              @if (
+                m.requiresFullAllocationSwitch() && !m.canReachFullAllocation()
+              ) {
+                <ui-message
+                  tone="warning"
+                  title="Full switch unavailable"
+                  class="income-allocation-blocked"
+                  >Only {{ m.maximumSelectableAllocation() }}% of this policy is
+                  eligible to switch. An Income Paying Fund requires all 100% to
+                  move together, so this request cannot continue online.<button
+                    class="link-button"
+                    (click)="s.targetId = ''; m.resetDocuments()"
+                  >
+                    Choose another target
+                  </button></ui-message
+                >
+              }
+              @if (
+                m.selectedSource()?.id === "dollar-income" &&
+                !m.requiresFullAllocationSwitch()
+              ) {
+                <ui-message
+                  title="Switching out of an Income Paying Fund"
+                  class="income-source-notice"
+                  >The full 100% holding can move to one target fund. Splitting
+                  it across multiple target funds is not available
+                  online.</ui-message
+                >
+              }
+              @if (s.fundCheck === "checking") {
+                <ui-skeleton />
+              } @else if (ready) {
+                <fund-summary />
+              }
+            }
+            @if (s.screen === "documents" || s.screen === "upload") {
+              <fund-uploads />
+            }
+            @if (s.screen === "review") {
+              <fund-summary />
+              @if (!s.waiverAccepted) {
+                <ui-message
+                  tone="warning"
+                  title="Fund Switch Waiver"
+                  class="review-waiver-banner"
+                  >The selected fund may have a different risk and return
+                  profile from your current holding and may not match your risk
+                  profile.</ui-message
+                >
+              }
+              <ds-checkbox
+                class="review-confirmation"
+                inputId="review-waiver-ack"
+                ariaLabelledby="review-waiver-label"
+                label=""
+                [required]="true"
+                [checked]="s.waiverAccepted"
+                (selectionChange)="s.waiverAccepted = $event.checked"
+                ><span id="review-waiver-label"
+                  >I confirm that I have reviewed my fund switch details,
+                  understand the risks, and agree to the
+                  <button
+                    class="waiver-terms-link"
+                    type="button"
+                    (click)="openModal('terms')"
+                  >
+                    terms and conditions</button
+                  >.</span
+                ></ds-checkbox
+              >
+            }
+          </div>
+          <footer class="flow-footer">
+            <ds-button
+              (click)="back()"
+              variant="primary"
+              emphasis="outline"
+              size="medium"
+              [useProjectedContent]="true"
+              label=""
+              >Back</ds-button
+            >
+            <div class="footer-actions">
+              @if (s.policyId && s.screen !== "policy") {
+                <ds-button
+                  class="btn-draft"
+                  (click)="savePrompt()"
+                  variant="secondary"
+                  emphasis="outline"
+                  size="medium"
+                  [useProjectedContent]="true"
+                  label=""
+                >
+                  Save as Draft
+                </ds-button>
+              }
+              <ds-button
+                id="flow-next"
+                [loading]="s.submitting"
+                [disabled]="nextDisabled"
+                (click)="next()"
+                [ariaLabel]="s.screen === 'review' ? 'Submit' : 'Next'"
+                variant="primary"
+                emphasis="default"
+                size="medium"
+                [useProjectedContent]="true"
+                label=""
+              >
+                @if (s.submitting) {
+                  <span class="button-loading"
+                    ><img src="assets/button-loading.svg" alt="" /><span
+                      class="visually-hidden"
+                      >Submitting your request</span
+                    ></span
+                  >
+                } @else {
+                  {{ s.screen === "review" ? "Submit" : "Next" }}
+                }
+              </ds-button>
+            </div>
+          </footer>
+        </section>
+      </section>
+    }
+  }
+</main>
+<button
+  id="scenario-guide-trigger"
+  class="scenario-guide-fab"
+  type="button"
+  [hidden]="s.screen === 'login' || guideHidden"
+  [inert]="!!modal || mobileOpen"
+  (click)="openModal('guide')"
+  aria-label="Open prototype scenario guide"
+  aria-controls="scenario-guide-popover"
+  [attr.aria-expanded]="modal === 'guide'"
+  title="Prototype Scenario Guide (Ctrl + Shift + G to show/hide)"
+  aria-keyshortcuts="Control+Shift+G"
+>
+  <span uiIcon name="cards_star"></span>
+</button>
+<div
+  id="toast"
+  class="toast"
+  [class.show]="!!toast"
+  [class.toast-success]="toastSuccess"
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"
+>
+  @if (toastSuccess) {
+    <span class="toast-success-icon"
+      ><span uiIcon name="check_circle"></span></span
+    ><span class="toast-copy"
+      ><strong>Draft Saved</strong><span>{{ toast }}</span></span
+    ><button
+      class="toast-dismiss"
+      (click)="toast = ''"
+      aria-label="Dismiss draft saved notification"
+    >
+      <span uiIcon name="close"></span>
+    </button>
+  } @else {
+    {{ toast }}
+  }
+</div>
+<div id="dialog-root">
+  @switch (modal) {
+    @case ("signature") {
+      <fund-signature
+        [canSubmit]="!nextDisabled && m.signatureReady()"
+        (cancelled)="closeModal()"
+        (confirmed)="submit()"
+      />
+    }
+    @case ("terms") {
+      <portal-terms />
+    }
+    @case ("onboarding") {
+      <portal-onboarding />
+    }
+    @case ("non-vul") {
+      <portal-non-vul />
+    }
+    @case ("draft") {
+      <div class="modal-backdrop draft-backdrop">
+        <ds-modal-dialog
+          class="portal-dialog"
+          panelClass="draft-modal"
+          size="medium"
+          alignment="right"
+          [isDismissible]="false"
+          [ariaModal]="true"
+          ariaLabelledby="draft-modal-title"
+        >
+          <div class="draft-modal-header">
+            <h2 id="draft-modal-title">Save as Draft?</h2>
+            <ds-button
+              class="ewa-icon-action"
+              (click)="cancelDraftPrompt()"
+              ariaLabel="Close save draft confirmation"
+              variant="subtle"
+              emphasis="transparent"
+              size="small"
+              label=""
+              leftIcon="close"
+            ></ds-button>
+          </div>
+          <p>
+            {{
+              fromDownload
+                ? "Complete the RPQ and IPS, then return to upload both. Save your progress to continue later from My Requests in Services."
+                : draftReturnSignature
+                  ? "Save your progress and continue later from My Requests in Services. You’ll need to sign again if you leave or reload this page."
+                  : "Save your progress and continue later from My Requests in Services."
+            }}
+          </p>
+          <footer dsModalDialogActions class="draft-modal-actions">
+            <ds-button
+              (click)="cancelDraftPrompt()"
+              variant="primary"
+              emphasis="outline"
+              size="medium"
+              [useProjectedContent]="true"
+              label=""
+            >
+              Cancel</ds-button
+            ><ds-button
+              (click)="saveDraft()"
+              variant="primary"
+              emphasis="default"
+              size="medium"
+              [useProjectedContent]="true"
+              label=""
+            >
+              Save Draft
+            </ds-button>
+          </footer>
+        </ds-modal-dialog>
+      </div>
+    }
+    @case ("pending") {
+      <div class="modal-backdrop">
+        <ds-modal-dialog
+          class="portal-dialog"
+          panelClass="eligibility-modal"
+          size="medium"
+          alignment="right"
+          [isDismissible]="false"
+          [ariaModal]="true"
+          ariaLabelledby="pending-request-title"
+        >
+          <div class="modal-header">
+            <div class="eligibility-title">
+              <span class="eligibility-icon pending-request-icon"
+                ><span uiIcon name="hourglass_bottom"></span
+              ></span>
+              <h2 id="pending-request-title">
+                Fund Switch Request Already Submitted
+              </h2>
+            </div>
+            <ds-button
+              class="ewa-icon-action"
+              (click)="closeModal()"
+              ariaLabel="Close pending request notice"
+              variant="subtle"
+              emphasis="transparent"
+              size="small"
+              label=""
+              leftIcon="close"
+            ></ds-button>
+          </div>
+          <p>
+            A Fund Switch request for
+            <strong>{{ modalPolicy?.product }} #{{ modalPolicy?.id }}</strong>
+            has already been submitted and is currently under review. You can
+            track its status in My Requests and submit a new request after this
+            one is completed.
+          </p>
+          <footer dsModalDialogActions class="modal-actions">
+            <ds-button
+              (click)="closeModal()"
+              variant="primary"
+              emphasis="outline"
+              size="medium"
+              [useProjectedContent]="true"
+              label=""
+            >
+              Close</ds-button
+            ><ds-button
+              (click)="
+                s.requestPolicyId = modalPolicy.id;
+                s.requestStatus = 'Submitted';
+                s.requestExpanded = true;
+                closeModal();
+                go('requests')
+              "
+              variant="primary"
+              emphasis="default"
+              size="medium"
+              [useProjectedContent]="true"
+              label=""
+            >
+              View My Requests
+            </ds-button>
+          </footer>
+        </ds-modal-dialog>
+      </div>
+    }
+    @case ("guide") {
+      <section
+        class="scenario-guide-popover"
+        id="scenario-guide-popover"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="scenario-guide-title"
+        tabindex="-1"
+      >
+        <header class="scenario-guide-header">
+          <h2 id="scenario-guide-title">Prototype Scenario Guide</h2>
+          <ds-button
+            class="ewa-icon-action"
+            (click)="closeModal()"
+            ariaLabel="Close prototype scenario guide"
+            variant="subtle"
+            emphasis="transparent"
+            size="small"
+            label=""
+            leftIcon="close"
+          ></ds-button>
+        </header>
+        <p class="scenario-guide-intro">
+          Choose a scenario to jump directly to its test state. This guide is
+          not part of the customer experience.
+        </p>
+        <label class="scenario-search" for="scenario-search"
+          ><span class="visually-hidden">Search prototype scenarios</span
+          ><span class="scenario-search-control"
+            ><span uiIcon name="search"></span
+            ><input
+              id="scenario-search"
+              type="search"
+              placeholder="Search scenarios..."
+              autocomplete="off"
+              [value]="search"
+              (input)="search = $any($event.target).value" /></span
+        ></label>
+        <div class="scenario-list" aria-label="Prototype scenarios">
+          @for (scenario of filteredScenarios; track scenario.id) {
+            <button class="scenario-link" (click)="launch(scenario.id)">
+              <strong>{{ scenario.title }}</strong
+              ><span uiIcon name="arrow_outward"></span>
+            </button>
+          } @empty {
+            <p class="scenario-empty" role="status">
+              No scenarios match your search.
+            </p>
+          }
+        </div>
+      </section>
+    }
+  }
+</div>

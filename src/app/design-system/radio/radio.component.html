@@ -1,0 +1,16 @@
+<label class="ds-radio" [class.ds-radio--disabled]="disabled">
+  <input
+    class="ds-radio__input"
+    type="radio"
+    [id]="inputId || null"
+    [attr.aria-label]="ariaLabel || null"
+    [attr.name]="name || null"
+    [value]="value"
+    [checked]="checked"
+    [disabled]="disabled"
+    [attr.aria-invalid]="invalid ? 'true' : null"
+    (change)="onChange($event)"
+  />
+  <span class="ds-radio__indicator" aria-hidden="true"></span>
+  <span class="ds-radio__label">{{ label }}<ng-content></ng-content></span>
+</label>

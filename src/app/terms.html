@@ -1,0 +1,89 @@
+<div class="modal-backdrop terms-backdrop">
+  <ds-modal-dialog
+    class="portal-dialog"
+    panelClass="waiver-modal terms-modal"
+    size="large"
+    alignment="right"
+    [isDismissible]="false"
+    [ariaModal]="true"
+    ariaLabelledby="waiver-terms-title"
+    ariaDescribedby="waiver-terms-subtitle"
+  >
+    <header class="terms-header">
+      <div>
+        <h2 id="waiver-terms-title">Terms and Conditions</h2>
+        <p id="waiver-terms-subtitle">Fund Switch Waiver</p>
+      </div>
+      <ds-button
+        class="ewa-icon-action"
+        type="button"
+        data-action="close-waiver-terms"
+        ariaLabel="Close terms and conditions"
+        variant="subtle"
+        emphasis="transparent"
+        size="small"
+        label=""
+        leftIcon="close"
+      ></ds-button>
+    </header>
+    <div
+      class="terms-body"
+      tabindex="0"
+      role="region"
+      aria-label="Fund switch waiver terms"
+    >
+      <ol class="terms-sections">
+        <li>
+          <h3>Change in Risk Level</h3>
+          <p>
+            The selected fund has a different risk and return profile than your
+            current holding.
+          </p>
+        </li>
+        <li>
+          <h3>Switching to a Higher-Risk Fund</h3>
+          <p>
+            May offer higher potential long-term returns, but exposes your
+            investment to greater market volatility and a higher risk of capital
+            loss.
+          </p>
+        </li>
+        <li>
+          <h3>Switching to a Lower-Risk Fund</h3>
+          <p>
+            Offers greater capital preservation or stability, but may yield
+            lower long-term returns that might not keep pace with inflation.
+          </p>
+        </li>
+        <li>
+          <h3>Risk Tolerance Alignment</h3>
+          <p>
+            Ensure this switch remains aligned with your overall investment
+            objectives, time horizon, and personal risk tolerance.
+          </p>
+        </li>
+        <li>
+          <h3>No Guarantee of Returns</h3>
+          <p>
+            Past performance of either fund is no guarantee or indicator of
+            future results. Investment values fluctuate, and you may receive
+            back less than your original investment.
+          </p>
+        </li>
+      </ol>
+    </div>
+    <footer dsModalDialogActions class="terms-footer">
+      <ds-button
+        type="button"
+        data-action="close-waiver-terms"
+        variant="primary"
+        emphasis="default"
+        size="medium"
+        [useProjectedContent]="true"
+        label=""
+      >
+        Close
+      </ds-button>
+    </footer>
+  </ds-modal-dialog>
+</div>

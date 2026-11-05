@@ -1,0 +1,147 @@
+<div class="documents-content">
+  <section
+    class="document-upload-section"
+    aria-label="Required document uploads"
+  >
+    <div class="document-upload-list">
+      @for (doc of documents; track doc.kind) {
+        @let upload = m.state.documentUploads[doc.kind];
+        @let error = upload.status.startsWith("error");
+        <section
+          class="document-upload-card"
+          [class.is-uploaded]="upload.status === 'uploaded'"
+          [class.has-error]="error"
+          [attr.aria-labelledby]="'upload-' + doc.kind + '-title'"
+        >
+          <h2 [id]="'upload-' + doc.kind + '-title'">{{ doc.label }}</h2>
+          <input
+            #file
+            class="visually-hidden document-file-input"
+            type="file"
+            [id]="'upload-' + doc.kind"
+            accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+            [attr.aria-label]="'Select ' + doc.label + ' file'"
+            (change)="choose(doc.kind, $event)"
+          />
+          <div
+            class="document-upload-box"
+            [class.is-uploading]="upload.status === 'uploading'"
+            [attr.role]="error ? 'alert' : 'status'"
+            aria-live="polite"
+            [attr.aria-busy]="upload.status === 'uploading'"
+          >
+            @if (upload.status === "uploading") {
+              <div class="document-upload-inflight">
+                <div class="document-upload-file-row">
+                  <span class="document-upload-icon"
+                    ><span uiIcon name="draft"></span></span
+                  ><span
+                    class="document-upload-filename"
+                    [title]="upload.name"
+                    >{{ upload.name }}</span
+                  ><ds-button
+                    class="document-upload-reset ewa-icon-action"
+                    (click)="reset(doc.kind)"
+                    [ariaLabel]="'Cancel ' + doc.label + ' upload'"
+                    variant="subtle"
+                    emphasis="transparent"
+                    size="small"
+                    label=""
+                    leftIcon="cancel"
+                  ></ds-button>
+                </div>
+                <div class="document-upload-progress-row">
+                  <ds-progress-bar
+                    class="document-upload-progress-bar"
+                    variant="processing"
+                    [progress]="upload.progress || 0"
+                    [ariaLabel]="'Uploading ' + doc.label"
+                  ></ds-progress-bar>
+                  <span>{{ upload.progress }}%</span>
+                </div>
+              </div>
+            } @else {
+              <span class="document-upload-icon"
+                ><span
+                  uiIcon
+                  [name]="
+                    upload.status === 'uploaded' ? 'check_circle' : 'draft'
+                  "
+                ></span></span
+              ><span class="document-upload-info">
+                @if (upload.status === "uploaded" || error) {
+                  <strong>{{
+                    error ? "Upload Failed" : "File Uploaded"
+                  }}</strong
+                  ><small [title]="upload.name">{{
+                    error ? errorCopy[upload.status] : upload.name
+                  }}</small>
+                } @else if (upload.status === "selected") {
+                  <span [title]="upload.name">{{ upload.name }}</span>
+                } @else {
+                  <span>JPG, PDF or PNG (Maximum of 5MB)</span>
+                }
+              </span>
+              @if (upload.status === "uploaded" || error) {
+                <ds-button
+                  class="document-upload-reset ewa-icon-action"
+                  (click)="
+                    upload.status === 'error'
+                      ? m.upload(doc.kind)
+                      : reset(doc.kind)
+                  "
+                  [ariaLabel]="
+                    (upload.status === 'uploaded' ? 'Reset' : 'Retry') +
+                    ' ' +
+                    doc.label
+                  "
+                  variant="subtle"
+                  emphasis="transparent"
+                  size="small"
+                  label=""
+                  leftIcon="refresh"
+                ></ds-button>
+              } @else {
+                @if (upload.status === "selected") {
+                  <ds-button
+                    class="document-upload-delete ewa-icon-action"
+                    (click)="reset(doc.kind)"
+                    [ariaLabel]="'Remove selected ' + doc.label"
+                    variant="subtle"
+                    emphasis="transparent"
+                    size="small"
+                    label=""
+                    leftIcon="delete"
+                  ></ds-button>
+                }
+                <ds-button
+                  class="document-upload-button"
+                  (click)="
+                    upload.status === 'selected'
+                      ? m.upload(doc.kind)
+                      : file.click()
+                  "
+                  [ariaLabel]="
+                    (upload.status === 'selected' ? 'Upload ' : 'Select ') +
+                    doc.label +
+                    (upload.status === 'selected' ? '' : ' file')
+                  "
+                  variant="secondary"
+                  emphasis="outline"
+                  size="small"
+                  [useProjectedContent]="true"
+                  label=""
+                >
+                  <span uiIcon name="upload"></span
+                  ><span>{{
+                    upload.status === "selected" ? "Upload" : "Select File"
+                  }}</span>
+                </ds-button>
+              }
+            }
+          </div>
+        </section>
+      }
+    </div>
+  </section>
+</div>

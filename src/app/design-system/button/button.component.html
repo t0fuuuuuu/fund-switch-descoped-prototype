@@ -1,0 +1,49 @@
+<button
+  [type]="type"
+  class="ds-button"
+  [ngClass]="buttonClasses"
+  [disabled]="isInteractionDisabled"
+  [attr.aria-busy]="isLoading ? 'true' : null"
+  [attr.aria-hidden]="skeleton ? 'true' : null"
+  [attr.aria-label]="ariaLabel || null"
+  [attr.aria-expanded]="ariaExpanded ?? null"
+  [attr.aria-controls]="ariaControls || null"
+  [attr.aria-pressed]="ariaPressed ?? null"
+  [attr.aria-disabled]="isInteractionDisabled ? 'true' : null"
+  [attr.data-variant]="variant"
+  [attr.data-emphasis]="resolvedEmphasis"
+  [attr.data-appearance]="resolvedEmphasis"
+  [attr.data-size]="size"
+  (click)="handleClick($event)"
+>
+  <span *ngIf="isLoading" class="ds-button__loading" aria-hidden="true">
+    <span class="ds-button__loading-dot"></span>
+    <span class="ds-button__loading-dot"></span>
+    <span class="ds-button__loading-dot"></span>
+  </span>
+
+  <span *ngIf="skeleton" class="ds-button__skeleton" aria-hidden="true"></span>
+
+  <ng-container *ngIf="!isLoading">
+    <span
+      *ngIf="leftIcon"
+      class="ds-button__icon material-symbols-rounded"
+      [style.font-variation-settings]="iconFontVariation"
+      aria-hidden="true">
+      {{ leftIcon }}
+    </span>
+
+    <span *ngIf="label && !useProjectedContent" class="ds-button__label">
+      {{ label }}
+    </span>
+
+    <span
+      *ngIf="rightIcon"
+      class="ds-button__icon material-symbols-rounded"
+      [style.font-variation-settings]="iconFontVariation"
+      aria-hidden="true">
+      {{ rightIcon }}
+    </span>
+    <span *ngIf="useProjectedContent" class="ds-button__label"><ng-content></ng-content></span>
+  </ng-container>
+</button>

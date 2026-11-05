@@ -1,0 +1,476 @@
+/* Angular hosts preserve the reference component's existing layout boxes. */
+portal-app,
+portal-dashboard,
+portal-dashboard-loading,
+portal-policy-details,
+portal-terms,
+portal-onboarding,
+portal-non-vul,
+portal-investments,
+fund-uploads,
+fund-summary,
+ui-skeleton {
+  display: contents;
+}
+.ds-select {
+  position: relative;
+}
+
+/* Portal layout adapters; component colors, type and interaction states come from EWA Storybook. */
+ui-message {
+  display: block;
+  margin-bottom: var(--space-xl);
+}
+ui-message .ds-section-message {
+  width: 100%;
+}
+.fund-dropdown {
+  display: block;
+  width: 100%;
+}
+.fund-dropdown .ds-dropdown-menu {
+  width: 100%;
+}
+.fund-risk-slot {
+  font-size: var(--tag-icon-size);
+  line-height: 1;
+}
+.ds-button__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+.ds-button__label .material-symbols-rounded {
+  font-size: var(--icon-2xl);
+}
+ds-button.btn-draft {
+  background: none;
+  border: 0;
+}
+.ewa-login-continue,
+.ewa-login-continue .ds-button {
+  width: 100%;
+}
+.login-form ds-text-field {
+  display: block;
+  margin-bottom: var(--space-2xl);
+}
+.login-form .ds-text-field__input {
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  min-height: 0;
+  padding: 0;
+}
+.policy-option .ds-radio {
+  align-items: center;
+  width: 100%;
+}
+.policy-option .ds-radio__label {
+  flex: 1;
+  min-width: 0;
+}
+.policy-option .ds-radio__label > .policy-card {
+  display: block;
+}
+.policy-option:has(input:checked) .policy-card {
+  background: #fbf9ff;
+  border-color: #8a5ec8;
+  box-shadow: 0 0 0 1px #8a5ec8;
+}
+ds-checkbox.review-confirmation {
+  display: block;
+  margin-top: var(--space-3xl);
+}
+.review-confirmation .ds-checkbox {
+  align-items: flex-start;
+}
+.review-confirmation .ds-checkbox__label {
+  white-space: normal;
+}
+.document-upload-progress-bar {
+  flex: 1;
+  min-width: 0;
+}
+.document-upload-reset,
+.document-upload-delete,
+.document-upload-button {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.portal-dialog {
+  display: contents;
+}
+.portal-dialog .ds-modal-dialog {
+  padding: 0;
+  max-height: calc(100dvh - 48px);
+}
+.portal-dialog .ds-modal-dialog__content {
+  overflow: auto;
+  min-height: 0;
+}
+.portal-dialog .ds-modal-dialog__content > p {
+  margin: 0;
+}
+.portal-dialog .ds-modal-dialog__actions {
+  flex-shrink: 0;
+}
+.portal-dialog .draft-modal-actions,
+.portal-dialog .modal-actions {
+  margin: 0;
+}
+.portal-dialog .terms-modal .ds-modal-dialog__content {
+  overflow: hidden;
+  padding: 0;
+  gap: 0;
+  align-items: stretch;
+}
+.portal-dialog .terms-modal .ds-modal-dialog__actions {
+  padding: 0;
+}
+.portal-dialog .terms-header {
+  flex-shrink: 0;
+}
+.portal-dialog .terms-body {
+  overflow: auto;
+  min-height: 0;
+}
+.portal-dialog .terms-footer {
+  width: 100% !important;
+  justify-content: flex-end;
+}
+.portal-dialog .onboarding-modal .ds-modal-dialog__content {
+  overflow: hidden;
+}
+.period-tabs .ds-tab-group {
+  max-width: 100%;
+}
+@media (max-width: 760px) {
+  .flow-footer > ds-button,
+  .footer-actions > ds-button,
+  .flow-footer ds-button .ds-button {
+    width: 100%;
+  }
+
+  .portal-dialog .ds-modal-dialog {
+    max-height: calc(100dvh - 24px);
+  }
+  .portal-dialog .draft-modal-actions {
+    flex-direction: column-reverse !important;
+    width: 100% !important;
+  }
+  .portal-dialog .draft-modal-actions ds-button,
+  .portal-dialog .draft-modal-actions .ds-button {
+    width: 100%;
+  }
+  .available-funds-header .period-tabs {
+    width: 100%;
+  }
+}
+
+/* A complete journey ends at its final indicator. */
+.stepper-body .ds-stepper__item:last-child .ds-stepper__connector--after {
+  visibility: hidden;
+}
+
+/* Let the tab viewport own horizontal scrolling inside the Investments grid. */
+.investments-content {
+  grid-template-columns: minmax(0, 1fr);
+}
+.investments-content > section,
+.available-funds-header,
+ds-tab-group.period-tabs {
+  min-width: 0;
+}
+ds-tab-group.period-tabs {
+  display: block;
+  max-width: 100%;
+}
+
+/* Do not let the retired draft-button host paint over the native component state. */
+ds-button.btn-draft:hover {
+  background: none;
+}
+
+/* Review annotations: one spacing owner, with controls aligned to the first text line. */
+.review-panel .flow-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+  padding: var(--space-3xl);
+}
+.review-panel .switch-summary {
+  margin: 0;
+  flex-shrink: 0;
+}
+.review-panel .review-waiver-banner,
+.review-panel ds-checkbox.review-confirmation {
+  margin: 0;
+  flex-shrink: 0;
+}
+.review-panel ds-checkbox.review-confirmation .ds-checkbox {
+  align-items: flex-start;
+}
+.review-panel .review-confirmation .ds-checkbox__indicator {
+  margin-block-start: calc(
+    (var(--checkbox-line-height) - var(--checkbox-control-size)) / 2
+  );
+}
+/* Cards remain native single-choice inputs, without visible radio chrome or its gutter. */
+.policy-list .policy-option .ds-radio {
+  display: block;
+  width: 100%;
+}
+.policy-list .policy-option .ds-radio__indicator {
+  display: none;
+}
+.policy-list .policy-option .ds-radio__label {
+  display: block;
+  width: 100%;
+}
+.policy-list .policy-option:has(input:focus-visible) .policy-card {
+  outline: 2px solid var(--focus-default);
+  outline-offset: 2px;
+}
+
+/* Figma Summary 7837:202903, composed with Fund Switch request content. */
+.success-card {
+  margin: 0 auto;
+  max-width: 1000px;
+  width: 100%;
+}
+.success-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 24px 12px;
+}
+.success-heading {
+  align-items: flex-end;
+  gap: 4px;
+}
+.success-animation {
+  width: 66px;
+  height: 60px;
+  object-fit: cover;
+}
+.success-heading h1 {
+  font-size: 28px;
+  line-height: 40px;
+  white-space: normal;
+  margin: 0;
+}
+.success-copy {
+  font-size: 16px;
+  line-height: 28px;
+  margin: 0;
+  text-align: center;
+  max-width: none;
+}
+.success-main > .success-heading {
+  padding-top: 16px;
+}
+.submission-progress {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+}
+.submission-progress .ds-stepper__label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.submission-progress .ds-stepper__item {
+  width: 100%;
+  min-height: 38px;
+}
+.submission-progress .ds-stepper__item--completed .ds-stepper__label > span {
+  font-weight: 700;
+}
+.submission-progress .ds-stepper__description {
+  font-size: 12px;
+  line-height: 20px;
+  color: #6a7282;
+  font-weight: 400;
+}
+.submission-progress .ds-stepper__item:first-child {
+  padding-bottom: 12px;
+}
+.success-card
+  .submission-progress
+  .ds-stepper--vertical
+  .ds-stepper__item
+  .ds-stepper__connector--after {
+  top: var(--stepper-indicator-size);
+  bottom: 0;
+  height: auto;
+}
+.submission-progress .ds-stepper__item:last-child {
+  min-height: 20px;
+}
+.submission-progress
+  .ds-stepper__item:last-child
+  .ds-stepper__connector--after {
+  display: none;
+}
+.success-main .request-summary {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.success-main .request-summary h2 {
+  font:
+    700 14px/22px Lato,
+    sans-serif;
+  color: #040712;
+  background: #f9fafb;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px 8px;
+  margin: 0;
+}
+.request-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 10px;
+  margin: 0;
+  padding: 12px 16px;
+}
+.request-details-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.request-details-grid dt {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #263234;
+}
+.request-details-grid dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgb(38 50 52 / 50%);
+  overflow-wrap: anywhere;
+}
+.success-actions {
+  padding: 16px 24px;
+}
+.success-actions ds-button {
+  --button-primary-outline-border: #dedede;
+  --button-primary-outline-text: #263234;
+}
+@media (max-width: 760px) {
+  .review-panel .flow-body {
+    padding: 18px 0 28px;
+  }
+  .success-main {
+    padding: 0 16px 12px;
+  }
+  .success-main > .success-heading {
+    padding-top: 16px;
+  }
+  .success-heading h1 {
+    font-size: 22px;
+    line-height: 30px;
+  }
+  .request-details-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .success-actions ds-button,
+  .success-actions .ds-button {
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  .request-details-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Review height follows its content instead of reserving the policy/fund selection height. */
+.flow-shell:has(.review-panel) {
+  min-height: 0;
+}
+
+.success-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 24px 0;
+  width: 100%;
+}
+.success-header .success-heading {
+  width: 100%;
+}
+@media (max-width: 760px) {
+  .success-header {
+    padding: 16px 0 0;
+  }
+}
+
+.submission-progress .ds-stepper__item--upcoming .ds-stepper__label {
+  opacity: 0.4;
+}
+.success-card
+  .submission-progress
+  .ds-stepper__item--upcoming
+  .ds-stepper__indicator {
+  opacity: var(--stepper-icon-opacity);
+}
+@media (max-width: 760px) {
+  .success-header .success-heading {
+    align-items: center;
+  }
+}
+
+/* The banner is a sibling of the fund picker, so spacing belongs to the flow. */
+.flow-body > ui-message.risk-documents-banner {
+  display: block;
+  margin-top: 24px;
+}
+
+/* Compose notices outside the summary, consistently across viewports. */
+.flow-body > ui-message.income-source-notice {
+  display: block;
+  margin-top: 24px;
+}
+fund-summary > ui-message.full-allocation-notice {
+  display: block;
+  margin-bottom: 24px;
+}
+ds-button.add-policy-button {
+  background: transparent;
+  border: 0;
+  min-height: 0;
+}
+.add-policy-button .ds-button {
+  width: 100%;
+}
+@media (max-width: 1100px) {
+}
+.dashboard-content {
+  grid-template-columns: minmax(0, 1fr);
+}
+.dashboard-content > * {
+  min-width: 0;
+}
+@media (max-width: 1100px) {
+  .add-policy-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    padding: 20px;
+  }
+  .add-policy-card h1 {
+    white-space: normal;
+    text-align: left;
+  }
+  ds-button.add-policy-button {
+    min-width: 0;
+    width: 100%;
+  }
+}

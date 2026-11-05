@@ -1,0 +1,42 @@
+<div
+  class="ds-section-message"
+  [ngClass]="sectionMessageClasses">
+  <span class="ds-section-message__icon-box" aria-hidden="true">
+    <span
+      class="ds-section-message__icon material-symbols-rounded"
+      [style.font-variation-settings]="iconFontVariation">
+      {{ resolvedIcon }}
+    </span>
+  </span>
+
+  <span class="ds-section-message__content">
+    <span *ngIf="showTitle" class="ds-section-message__title">{{ title }}</span>
+    <span *ngIf="showDescription" class="ds-section-message__description">{{ description }}<ng-content></ng-content></span>
+
+    <span *ngIf="showAction1 || showAction2" class="ds-section-message__actions">
+      <button
+        *ngIf="showAction1"
+        type="button"
+        class="ds-section-message__action"
+        (click)="action1Clicked.emit($event)">
+        {{ label1 }}
+      </button>
+      <button
+        *ngIf="showAction2"
+        type="button"
+        class="ds-section-message__action"
+        (click)="action2Clicked.emit($event)">
+        {{ label2 }}
+      </button>
+    </span>
+  </span>
+
+  <button
+    *ngIf="isDismissible"
+    type="button"
+    class="ds-section-message__dismiss"
+    aria-label="Dismiss message"
+    (click)="dismissed.emit($event)">
+    <span class="ds-section-message__dismiss-icon material-symbols-rounded" aria-hidden="true">close</span>
+  </button>
+</div>

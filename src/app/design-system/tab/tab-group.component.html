@@ -1,0 +1,45 @@
+<div class="ds-tab-group" [class.ds-tab-group--center]="alignment === 'center'" [class.ds-tab-group--right]="alignment === 'right'" [class.ds-tab-group--medium]="size === 'medium'" [class.ds-tab-group--overflow-enabled]="shouldShowOverflow" role="tablist">
+  <div #tabsViewport class="ds-tab-group__tabs" (scroll)="onTabsScroll()">
+    <ds-tab
+      *ngFor="let tab of tabs; let index = index"
+      [label]="tab.label"
+      [size]="size"
+      [value]="tab.value || ''"
+      [disabled]="!!tab.disabled"
+      [selected]="index === resolvedSelectedIndex"
+      [statusIcon]="tab.statusIcon || 'warning'"
+      [disclosureIcon]="tab.disclosureIcon || 'keyboard_arrow_down'"
+      [showStatusIcon]="!!tab.showStatusIcon"
+      [showDisclosureIcon]="!!tab.showDisclosureIcon"
+      [showBadge]="!!tab.showBadge"
+      [badge]="tab.badge ?? '#'"
+      [showIndicator]="!!tab.showIndicator"
+      (tabSelected)="selectTab(index)"
+      (keydown)="onTabKeydown($event, index)">
+    </ds-tab>
+  </div>
+
+  <div *ngIf="shouldShowOverflow" class="ds-tab-group__overflow-wrap" (keydown.escape)="closeOverflow($event)">
+    <button
+      type="button"
+      class="ds-tab-group__overflow"
+      [class.ds-tab-group__overflow--open]="isOverflowOpen"
+      aria-label="More tabs"
+      [attr.aria-expanded]="isOverflowOpen"
+      aria-haspopup="menu"
+      (click)="toggleOverflow()">
+      <span class="material-symbols-rounded ds-tab-group__overflow-icon" aria-hidden="true">more_horiz</span>
+      <span class="ds-tab-group__overflow-shadow" aria-hidden="true"></span>
+    </button>
+    <span *ngIf="isOverflowOpen" class="ds-tab-group__menu" role="menu">
+      <button
+        *ngFor="let item of visibleOverflowItems"
+        type="button"
+        role="menuitem"
+        [disabled]="!!item.disabled"
+        (click)="selectOverflowItem(item)">
+        {{ item.label }}
+      </button>
+    </span>
+  </div>
+</div>

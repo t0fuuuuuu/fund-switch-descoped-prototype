@@ -1,0 +1,303 @@
+:host {
+  display: block;
+}
+
+.ds-text-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 100%;
+}
+
+.ds-text-field--fluid {
+  width: 100%;
+}
+
+.ds-text-field__label {
+  color: var(--text-field-text);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--typography-font-family-paragraph);
+  font-size: var(--text-field-font-size);
+  font-weight: var(--font-weight-regular);
+  gap: var(--space-xs);
+  line-height: var(--text-field-line-height);
+  min-width: 0;
+}
+
+.ds-text-field__label-heading {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-xs);
+}
+
+.ds-text-field__label-text {
+  min-height: var(--text-field-line-height);
+}
+
+.ds-text-field__label-icon {
+  color: var(--text-field-icon);
+  flex: 0 0 auto;
+  font-size: var(--text-field-label-icon-size);
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  height: var(--text-field-label-icon-size);
+  line-height: 1;
+  place-content: center;
+  width: var(--text-field-label-icon-size);
+}
+
+.ds-text-field__label-icon--filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.ds-text-field__control {
+  align-items: center;
+  background: var(--text-field-bg);
+  border: var(--text-field-border-width) solid var(--text-field-border-default);
+  border-radius: var(--text-field-radius);
+  box-sizing: border-box;
+  display: flex;
+  gap: var(--text-field-content-gap);
+  height: var(--text-field-height);
+  min-width: 0;
+  padding: var(--text-field-padding);
+  width: 100%;
+}
+
+.ds-text-field--select-trigger:not(.ds-text-field--editable-trigger) .ds-text-field__control,
+.ds-text-field--select-trigger:not(.ds-text-field--editable-trigger) .ds-text-field__input {
+  cursor: pointer;
+}
+
+.ds-text-field--editable-trigger .ds-text-field__input {
+  cursor: text;
+}
+
+.ds-text-field--select-trigger .ds-text-field__input {
+  text-align: left;
+}
+
+.ds-text-field--select-placeholder .ds-text-field__input {
+  color: var(--text-field-placeholder);
+}
+
+.ds-text-field--projected-value .ds-text-field__control {
+  position: relative;
+}
+
+.ds-text-field__projected-value {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--space-xs);
+  min-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.ds-text-field--projected-value .ds-text-field__input {
+  height: 100%;
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+.ds-text-field--projected-value-editable .ds-text-field__projected-value {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.ds-text-field--projected-value-editable .ds-text-field__input {
+  flex: 1 1 auto;
+  height: auto;
+  inset: auto;
+  opacity: 1;
+  position: relative;
+  width: auto;
+  z-index: auto;
+}
+
+.ds-text-field--compact .ds-text-field__control {
+  height: var(--text-field-height-compact);
+}
+
+.ds-text-field--read-only {
+  justify-content: center;
+  padding-block: var(--space-md);
+}
+
+.ds-text-field--compact.ds-text-field--read-only {
+  padding-block: var(--space-sm);
+}
+
+.ds-text-field--read-only .ds-text-field__label-text {
+  color: var(--text-neutral-secondary);
+  font-size: var(--caption-text-size);
+  line-height: var(--caption-line-height);
+  min-height: var(--caption-line-height);
+}
+
+.ds-text-field--read-only .ds-text-field__control {
+  align-items: flex-start;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  height: auto;
+  padding: 0;
+}
+
+.ds-text-field--compact.ds-text-field--read-only .ds-text-field__control {
+  align-items: center;
+}
+
+.ds-text-field--read-only .ds-text-field__control:focus-within {
+  border: 0;
+  box-shadow: none;
+}
+
+.ds-text-field:not(.ds-text-field--disabled):not(.ds-text-field--invalid):not(.ds-text-field--read-only) .ds-text-field__control:hover:not(:focus-within) {
+  background: var(--text-field-bg-hover);
+  border-color: var(--text-field-border-hover);
+}
+
+.ds-text-field:not(.ds-text-field--read-only) .ds-text-field__control:focus-within {
+  border-color: var(--text-field-border-focus);
+  box-shadow: 0 0 0 var(--border-width-xs-1) var(--text-field-border-focus);
+}
+
+.ds-text-field--invalid .ds-text-field__control,
+.ds-text-field--invalid .ds-text-field__control:hover,
+.ds-text-field--invalid .ds-text-field__control:focus-within {
+  border-color: var(--text-field-border-invalid);
+}
+
+.ds-text-field--invalid .ds-text-field__control {
+  border-width: var(--text-field-border-width-focus);
+}
+
+.ds-text-field.ds-text-field--invalid .ds-text-field__control:focus-within {
+  border-color: var(--text-field-border-invalid);
+  box-shadow: none;
+}
+
+.ds-text-field__input {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--text-field-text);
+  flex: 1 1 auto;
+  font-family: var(--typography-font-family-paragraph);
+  font-size: var(--text-field-font-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--text-field-line-height);
+  min-width: 0;
+  outline: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.ds-text-field__input:autofill,
+.ds-text-field__input:-webkit-autofill,
+.ds-text-field__input:-webkit-autofill:hover,
+.ds-text-field__input:-webkit-autofill:focus {
+  background-color: var(--text-field-bg) !important;
+  background-image: none !important;
+  -webkit-box-shadow: 0 0 0 100vmax var(--text-field-bg) inset;
+  -webkit-text-fill-color: var(--text-field-text);
+  caret-color: var(--text-field-text);
+}
+
+@supports selector(.ds-text-field__input:-internal-autofill-previewed) {
+  .ds-text-field__input:-internal-autofill-previewed,
+  .ds-text-field__input:-internal-autofill-selected {
+    -webkit-box-shadow: 0 0 0 100vmax var(--text-field-bg) inset;
+    -webkit-text-fill-color: var(--text-field-text);
+    caret-color: var(--text-field-text);
+  }
+}
+
+.ds-text-field__control:hover:not(:focus-within) .ds-text-field__input:autofill,
+.ds-text-field__control:hover:not(:focus-within) .ds-text-field__input:-webkit-autofill,
+.ds-text-field__control:hover:not(:focus-within) .ds-text-field__input:-webkit-autofill:hover {
+  background-color: var(--text-field-bg-hover) !important;
+  -webkit-box-shadow: 0 0 0 100vmax var(--text-field-bg-hover) inset;
+}
+
+@supports selector(.ds-text-field__input:-internal-autofill-previewed) {
+  .ds-text-field__control:hover:not(:focus-within) .ds-text-field__input:-internal-autofill-previewed,
+  .ds-text-field__control:hover:not(:focus-within) .ds-text-field__input:-internal-autofill-selected {
+    -webkit-box-shadow: 0 0 0 100vmax var(--text-field-bg-hover) inset;
+  }
+}
+
+.ds-text-field__input::placeholder {
+  color: var(--text-field-placeholder);
+  opacity: 1;
+}
+
+.ds-text-field__icon {
+  color: var(--text-field-icon);
+  flex: 0 0 auto;
+  font-size: var(--text-field-icon-size);
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  height: var(--text-field-icon-size);
+  line-height: 1;
+  place-content: center;
+  width: var(--text-field-icon-size);
+}
+
+.ds-text-field__icon--trailing {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.ds-text-field__adornment {
+  color: var(--text-field-text);
+  flex: 0 0 auto;
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+
+.ds-text-field__prefix {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: var(--space-xs);
+  white-space: nowrap;
+}
+
+.ds-text-field__prefix-icon {
+  display: block;
+  height: var(--icon-lg);
+  object-fit: contain;
+  width: var(--icon-xl);
+}
+
+.ds-text-field__supporting-text {
+  color: var(--text-field-helper);
+  font-family: var(--typography-font-family-paragraph);
+  font-size: var(--caption-text-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--caption-line-height);
+  overflow-wrap: anywhere;
+}
+
+.ds-text-field__supporting-text--error {
+  color: var(--text-field-error);
+}
+
+.ds-text-field--disabled .ds-text-field__control {
+  opacity: var(--text-field-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.ds-text-field--disabled .ds-text-field__input,
+.ds-text-field--disabled .ds-text-field__adornment,
+.ds-text-field--disabled .ds-text-field__icon {
+  cursor: not-allowed;
+}
+
+// Integration: accessible password visibility action; use the existing field adornment tokens.
+.ds-text-field__trailing-action {appearance:none;background:transparent;border:0;padding:0;display:inline-flex;align-items:center;cursor:pointer;color:inherit;flex-shrink:0;}

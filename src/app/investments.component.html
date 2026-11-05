@@ -1,0 +1,218 @@
+<section class="investments-layout" aria-labelledby="investments-title">
+  <aside class="investments-sidebar">
+    <section class="investor-card">
+      <div class="investor-avatar" aria-hidden="true">E</div>
+      <h2>Welcome Elizabeth!</h2>
+      <p><span uiIcon name="call"></span> +63 908 655 5256</p>
+      <p><span uiIcon name="mail"></span> elizabeth.garcia&#64;email.com</p>
+    </section>
+    <section class="investment-toolkit" aria-labelledby="toolkit-title">
+      <h2 id="toolkit-title">Toolkit</h2>
+      @for (
+        item of [
+          "Policy Change and Payment Forms",
+          "Policy Fund Value Management",
+          "Policy Cancellation and Reinstatement",
+          "Policy Claim Forms",
+        ];
+        track item
+      ) {
+        <button
+          (click)="
+            notice.emit('This toolkit item is outside this Fund Switch demo.')
+          "
+        >
+          {{ item }}<span uiIcon name="keyboard_arrow_right"></span>
+        </button>
+      }
+    </section>
+    <section class="sidebar-risk-profile" aria-labelledby="sidebar-risk-title">
+      <h2 id="sidebar-risk-title">Risk Profile</h2>
+      <p>
+        <span class="risk-dot" aria-hidden="true"></span
+        ><strong>Moderate</strong
+        ><button
+          (click)="notice.emit('Your current risk profile is Moderate.')"
+        >
+          Learn more
+        </button>
+      </p>
+    </section>
+    <section class="care-card" aria-labelledby="care-title">
+      <h2 id="care-title">Customer Care</h2>
+      <p>Need help? Feel free to contact us:</p>
+      <span><span uiIcon name="call"></span> +63 2 8939 3924</span
+      ><span><span uiIcon name="mail"></span> AskMe&#64;ewageas.com.ph</span>
+    </section>
+  </aside>
+  <div class="investments-content">
+    <section
+      class="investment-policy-section"
+      aria-labelledby="investments-title"
+    >
+      <h1 id="investments-title">My Investment Policies</h1>
+      <div class="investment-policy-list">
+        @for (policy of policies; track policy.id) {
+          @let expanded = m.state.investmentExpandedPolicyId === policy.id;
+          <article class="investment-policy-card" [class.expanded]="expanded">
+            <header>
+              <div>
+                <h2>{{ policy.title }}</h2>
+                <p>
+                  {{ policy.product }} <span>#{{ policy.id }}</span>
+                </p>
+              </div>
+              <div class="investment-policy-actions">
+                <button
+                  class="text-action"
+                  (click)="
+                    m.state.investmentExpandedPolicyId = expanded
+                      ? ''
+                      : policy.id
+                  "
+                  [attr.aria-expanded]="expanded"
+                >
+                  {{ expanded ? "Hide" : "Show" }} Fund Breakdown
+                  <span
+                    uiIcon
+                    [name]="expanded ? 'expand_less' : 'expand_more'"
+                  ></span>
+                </button>
+              </div>
+            </header>
+            <div class="policy-overview">
+              <div>
+                <span
+                  >Income Payout Option <span uiIcon name="help"></span></span
+                ><strong>{{ policy.payout }}</strong
+                ><small>AS OF {{ policy.asOf.toUpperCase() }}</small>
+              </div>
+              <div>
+                <span>Fund Value <span uiIcon name="help"></span></span
+                ><strong>{{
+                  m.money(policy.value, policy.currency || "PHP")
+                }}</strong>
+              </div>
+            </div>
+            @if (expanded) {
+              <div
+                class="investment-breakdown"
+                role="table"
+                [attr.aria-label]="policy.title + ' fund breakdown'"
+              >
+                <div class="investment-fund-table-head" role="row">
+                  <span role="columnheader"
+                    >Fund Name <span uiIcon name="help"></span
+                    ><span uiIcon name="north"></span></span
+                  ><span role="columnheader"
+                    >NAVPU <span uiIcon name="help"></span></span
+                  ><span role="columnheader"
+                    >Units <span uiIcon name="help"></span></span
+                  ><span role="columnheader"
+                    >Allocation <span uiIcon name="help"></span></span
+                  ><span role="columnheader"
+                    >Fund Value <span uiIcon name="help"></span></span
+                  ><span role="columnheader" class="visually-hidden"
+                    >Action</span
+                  >
+                </div>
+                @for (fund of policy.funds; track fund.id) {
+                  <div
+                    [class]="'investment-fund-table-row ' + fund.accent"
+                    role="row"
+                  >
+                    <span role="cell" class="investment-held-fund">{{
+                      fund.name
+                    }}</span
+                    ><span role="cell" data-label="NAVPU">{{ fund.navpu }}</span
+                    ><span role="cell" data-label="Units">{{ fund.units }}</span
+                    ><span role="cell" data-label="Allocation">{{
+                      fund.allocation
+                    }}</span
+                    ><span
+                      role="cell"
+                      data-label="Fund Value"
+                      class="investment-fund-value"
+                      ><strong>{{
+                        m.money(fund.value, policy.currency || "PHP")
+                      }}</strong></span
+                    ><span role="cell" class="investment-fund-action"
+                      ><button
+                        class="fund-switch-action"
+                        (click)="
+                          switchFund.emit({
+                            policyId: policy.id,
+                            sourceId: fund.id,
+                          })
+                        "
+                      >
+                        Switch Fund
+                      </button></span
+                    >
+                  </div>
+                }
+              </div>
+            }
+          </article>
+        }
+      </div>
+    </section>
+    <section
+      class="investment-risk-profile"
+      aria-labelledby="investment-risk-title"
+    >
+      <h2 id="investment-risk-title">Risk Profile</h2>
+      <p class="risk-level">
+        <span class="risk-dot" aria-hidden="true"></span
+        ><strong>Moderate</strong>
+      </p>
+      <p class="risk-description">
+        You would like to make your investment earn more than the deposit
+        products and would be open to some medium-term market fluctuations to
+        achieve this. You do not have an immediate need for your invested money.
+        You are not ready to commit a large percentage of your money to heavy
+        market value fluctuations as with equities or shares of stocks of public
+        companies.
+      </p>
+    </section>
+    <section
+      class="available-funds-section"
+      aria-labelledby="available-funds-title"
+    >
+      <header class="available-funds-header">
+        <h2 id="available-funds-title">Available Funds</h2>
+        <ds-tab-group
+          class="period-tabs"
+          [tabs]="periodTabs"
+          [selectedIndex]="periods.indexOf(m.state.investmentPeriod)"
+          size="small"
+          (selectedIndexChange)="
+            m.state.investmentPeriod = periods[$event]; drawCharts()
+          "
+        ></ds-tab-group>
+      </header>
+      <div class="investment-fund-grid">
+        @for (fund of funds; track fund.name) {
+          <article class="investment-fund-card">
+            <h3>{{ fund.name }}</h3>
+            <p>
+              <strong>{{ fund.value }}</strong
+              ><span [class]="'fund-change ' + fund.tone"
+                >{{ fund.change }}
+                <span
+                  uiIcon
+                  [name]="fund.tone === 'down' ? 'south' : 'north'"
+                ></span
+              ></span>
+            </p>
+            <canvas
+              class="fund-performance-chart"
+              [attr.data-chart]="fund.chart"
+              [attr.aria-label]="fund.name + ' performance chart'"
+            ></canvas>
+          </article>
+        }
+      </div>
+    </section>
+  </div>
+</section>

@@ -1,0 +1,90 @@
+:host {
+  display: flex;
+  min-width: 100px;
+  padding: 0 var(--space-md, 8px);
+}
+
+.ds-tab {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  color: var(--tab-text-default, var(--text-neutral-primary, #364154));
+  cursor: pointer;
+  display: flex;
+  font: var(--font-weight-bold, 700) var(--tab-font-size, 14px)/var(--tab-line-height, 20px) var(--typography-font-family-paragraph, Lato), sans-serif;
+  height: var(--tab-height, 32px);
+  justify-content: center;
+  min-width: 100px;
+  padding: 0 var(--space-md, 8px);
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    background: var(--tab-bg-hover, #f9fafb);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-xs-2, 2px) solid var(--focus-default, #aa86e4);
+    outline-offset: 2px;
+  }
+}
+
+.ds-tab--medium {
+  --tab-font-size: 16px;
+  --tab-height: 40px;
+  --tab-line-height: 24px;
+}
+
+:host([data-story-state="hover"]) .ds-tab {
+  background: var(--tab-bg-hover, #f9fafb);
+}
+
+.ds-tab--selected {
+  border-bottom-color: var(--tab-active-indicator, var(--text-secondary-default, #a82675));
+  color: var(--tab-text-active, var(--text-secondary-default, #a82675));
+}
+
+.ds-tab--disabled {
+  cursor: not-allowed;
+  opacity: var(--tab-opacity-disabled, 0.4);
+}
+
+.ds-tab__label {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-md, 8px);
+  justify-content: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.ds-tab__icon {
+  color: var(--tab-icon-default, var(--text-neutral-primary, #364154));
+  font-size: 16px;
+  height: 16px;
+  line-height: 1;
+  width: 16px;
+}
+
+.ds-tab__label .ds-tab__icon:first-child {
+  color: var(--tab-icon-warning, var(--icon-warning-contrast-default, #f99f1b));
+}
+
+.ds-tab__indicator {
+  color: var(--tab-indicator, var(--background-danger-default, #d00132));
+}
+
+.ds-tab__badge {
+  align-items: center;
+  background: var(--tab-badge-bg, var(--background-danger-default, #d00132));
+  border-radius: var(--radius-round, 9999px);
+  color: var(--tab-badge-text, var(--text-neutral-inverse, #f9fafb));
+  display: inline-flex;
+  box-sizing: border-box;
+  font: 400 var(--caption-sm-text-size, 10px)/var(--caption-sm-line-height, 14px) var(--typography-font-family-paragraph, Lato), sans-serif;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 4px 1px;
+}

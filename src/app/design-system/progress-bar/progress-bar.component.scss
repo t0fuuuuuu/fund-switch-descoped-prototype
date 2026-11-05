@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.ds-progress-bar {
+  --progress-bar-fill: var(--progress-brand-fill);
+
+  background: var(--progress-bar-track);
+  border-radius: var(--progress-bar-radius);
+  height: var(--progress-bar-height);
+  overflow: hidden;
+  width: 100%;
+}
+
+.ds-progress-bar__fill {
+  background: var(--progress-bar-fill);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+}
+
+.ds-progress-bar--success {
+  --progress-bar-fill: var(--progress-bar-success-fill);
+}
+
+.ds-progress-bar--processing {
+  --progress-bar-fill: var(--progress-bar-processing-fill);
+}

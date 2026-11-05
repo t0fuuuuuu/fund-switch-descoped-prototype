@@ -1,0 +1,88 @@
+:host {
+  display: inline-flex;
+}
+
+.ds-link {
+  align-items: center;
+  color: var(--link-text-color, var(--text-secondary-default));
+  display: inline-flex;
+  font-family: var(--typography-font-family-paragraph);
+  font-size: var(--link-font-size);
+  font-weight: var(--font-weight-regular, 400);
+  gap: var(--space-xs);
+  line-height: var(--link-line-height);
+  text-decoration: none;
+  text-underline-offset: 0.15em;
+
+  &:hover {
+    color: var(--link-text-hover, var(--link-text-color, var(--text-secondary-hover)));
+  }
+
+  &:hover .ds-link__label {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    border-radius: var(--space-3xs);
+    outline: var(--border-width-xs-2) solid var(--focus-default);
+    outline-offset: var(--space-2xs);
+  }
+}
+
+.ds-link--inline {
+  .ds-link__label {
+    text-decoration: underline;
+  }
+}
+
+.ds-link[data-visual-variant='subtle'] {
+  --link-text-color: var(--text-neutral-primary);
+}
+
+.ds-link[data-visual-variant='strong'] {
+  --link-text-color: var(--text-neutral-primary);
+}
+
+.ds-link[data-visual-variant='inverse'] {
+  --link-text-color: var(--text-neutral-inverse);
+}
+
+.ds-link[data-strong='true'] {
+  font-weight: var(--font-weight-bold, 700);
+}
+
+.ds-link--size-18 {
+  --link-font-size: var(--link-size-18-font-size, 18px);
+  --link-line-height: var(--link-size-18-line-height, 28px);
+  --link-icon-size: var(--link-size-18-icon-size, 20px);
+}
+
+.ds-link--size-16 {
+  --link-font-size: var(--link-size-16-font-size, 16px);
+  --link-line-height: var(--link-size-16-line-height, 24px);
+  --link-icon-size: var(--link-size-16-icon-size, 16px);
+}
+
+.ds-link--size-14 {
+  --link-font-size: var(--link-size-14-font-size, 14px);
+  --link-line-height: var(--link-size-14-line-height, 20px);
+  --link-icon-size: var(--link-size-14-icon-size, 16px);
+}
+
+.ds-link--size-12 {
+  --link-font-size: var(--link-size-12-font-size, 12px);
+  --link-line-height: var(--link-size-12-line-height, 16px);
+  --link-icon-size: var(--link-size-12-icon-size, 16px);
+}
+
+.ds-link--size-10 {
+  --link-font-size: var(--link-size-10-font-size, 10px);
+  --link-line-height: var(--link-size-10-line-height, 14px);
+  --link-icon-size: var(--link-size-10-icon-size, 12px);
+}
+
+.ds-link__icon {
+  flex: 0 0 auto;
+  font-size: var(--link-icon-size);
+  line-height: 1;
+}

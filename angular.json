@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "projects": {
+    "fund-switch": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.json",
+            "polyfills": [
+              "zone.js"
+            ],
+            "styles": [
+              "src/fonts.css",
+              "src/design-system.tokens.css",
+              "styles.css",
+              "src/angular.css"
+            ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "output/pdf",
+                "output": "output/pdf"
+              }
+            ],
+            "outputPath": "dist/fund-switch",
+            "optimization": {
+              "scripts": true,
+              "styles": true,
+              "fonts": false
+            }
+          },
+          "configurations": {
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            },
+            "production": {}
+          }
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "fund-switch:build:development"
+          }
+        }
+      }
+    }
+  }
+}

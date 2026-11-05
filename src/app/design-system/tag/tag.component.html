@@ -1,0 +1,24 @@
+<span class="ds-tag" [ngClass]="tagClasses">
+  <ng-content select="[dsTagSlot]"></ng-content>
+
+  <span
+    *ngIf="leadingIcon"
+    class="ds-tag__icon material-symbols-rounded"
+    aria-hidden="true"
+  >
+    {{ leadingIcon }}
+  </span>
+
+  <span class="ds-tag__label">{{ label }}</span>
+
+  <button
+    *ngIf="removable"
+    class="ds-tag__remove"
+    type="button"
+    [attr.aria-label]="removeAriaLabel"
+    [disabled]="disabled"
+    (click)="handleRemove($event)"
+  >
+    <span class="ds-tag__remove-icon material-symbols-rounded" aria-hidden="true">cancel</span>
+  </button>
+</span>

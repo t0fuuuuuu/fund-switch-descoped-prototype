@@ -1,0 +1,128 @@
+:host {
+  display: inline-flex;
+}
+
+@mixin tag-variant($variant) {
+  background: var(--tag-#{$variant}-bg-default);
+  border-color: var(--tag-#{$variant}-border-default);
+  color: var(--tag-#{$variant}-text-default);
+
+  .ds-tag__icon,
+  .ds-tag__remove {
+    color: var(--tag-#{$variant}-icon-default);
+  }
+
+  &:hover:not(.ds-tag--disabled) {
+    background: var(--tag-#{$variant}-bg-hover);
+  }
+
+  &:active:not(.ds-tag--disabled),
+  &.ds-tag--removable:has(.ds-tag__remove:active):not(.ds-tag--disabled) {
+    background: var(--tag-#{$variant}-bg-pressed);
+  }
+}
+
+.ds-tag {
+  align-items: center;
+  border: var(--tag-border-width) solid transparent;
+  border-radius: var(--tag-radius);
+  box-sizing: border-box;
+  display: inline-flex;
+  font-family: var(--typography-font-family-paragraph);
+  font-size: var(--tag-font-size);
+  font-weight: var(--tag-font-weight);
+  justify-content: center;
+  letter-spacing: var(--tag-letter-spacing);
+  line-height: var(--tag-line-height);
+  height: var(--tag-height);
+  padding: var(--tag-padding-y) var(--tag-padding-x);
+  position: relative;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease,
+    opacity 160ms ease;
+  white-space: nowrap;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+
+  &:has(:focus-visible)::after {
+    border: var(--tag-focus-ring-width) solid var(--tag-focus-ring);
+    border-radius: var(--tag-radius);
+    content: '';
+    inset: calc(var(--tag-focus-ring-offset) * -1);
+    pointer-events: none;
+    position: absolute;
+  }
+}
+
+.ds-tag__label {
+  display: inline-flex;
+  padding-inline: var(--tag-icon-gap);
+  padding-block-end: var(--tag-label-offset-y);
+}
+
+.ds-tag__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: var(--tag-icon-size);
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  height: var(--tag-icon-size);
+  line-height: 1;
+  place-content: center;
+  width: var(--tag-icon-size);
+}
+
+.ds-tag__remove {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-round);
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: var(--tag-remove-size);
+  justify-content: center;
+  margin: 0;
+  padding: var(--tag-remove-padding);
+  width: var(--tag-remove-size);
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--tag-focus-ring-width) var(--tag-focus-ring);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.ds-tag__remove-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: var(--tag-remove-icon-size);
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  height: var(--tag-remove-icon-size);
+  line-height: 1;
+  place-content: center;
+  width: var(--tag-remove-icon-size);
+}
+
+.ds-tag--disabled {
+  opacity: var(--tag-disabled-opacity);
+
+  .ds-tag__remove {
+    pointer-events: none;
+  }
+}
+
+@each $variant in neutral, primary, success, warning, danger, info {
+  .ds-tag--#{$variant} {
+    @include tag-variant($variant);
+  }
+}

@@ -1,0 +1,73 @@
+<div class="modal-backdrop">
+  <ds-modal-dialog
+    class="portal-dialog"
+    panelClass="eligibility-modal"
+    size="medium"
+    alignment="right"
+    [isDismissible]="false"
+    [ariaModal]="true"
+    ariaLabelledby="eligibility-title"
+  >
+    <div class="modal-header">
+      <div class="eligibility-title">
+        <span class="eligibility-icon"
+          ><span class="material-symbols-rounded" aria-hidden="true"
+            >policy</span
+          ></span
+        >
+        <h2 id="eligibility-title">Fund Switch Unavailable</h2>
+      </div>
+      <ds-button
+        class="ewa-icon-action"
+        type="button"
+        data-action="choose-another-policy"
+        ariaLabel="Close and choose another policy"
+        variant="subtle"
+        emphasis="transparent"
+        size="small"
+        label=""
+        leftIcon="close"
+      ></ds-button>
+    </div>
+    <p>
+      <strong>Dream Builder</strong> is a traditional life policy, so it doesn’t
+      have investment funds to switch.
+    </p>
+    <div class="section-message eligibility-guidance">
+      <span
+        ><span class="material-symbols-rounded" aria-hidden="true"
+          >lightbulb</span
+        ></span
+      >
+      <div>
+        <span
+          >You can explore VUL products without changing your current policy or
+          starting an application.</span
+        >
+      </div>
+    </div>
+    <footer dsModalDialogActions class="modal-actions">
+      <ds-button
+        type="button"
+        data-action="close-non-vul-modal"
+        variant="primary"
+        emphasis="outline"
+        size="medium"
+        [useProjectedContent]="true"
+        label=""
+      >
+        Cancel</ds-button
+      ><ds-button
+        type="button"
+        data-action="explore-vul-policies"
+        variant="primary"
+        emphasis="default"
+        size="medium"
+        [useProjectedContent]="true"
+        label=""
+      >
+        Explore VUL products
+      </ds-button>
+    </footer>
+  </ds-modal-dialog>
+</div>
